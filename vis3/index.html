@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="main.css"> 
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+<style>
+
+
+/**/
+div.tooltip {
+        position: absolute;
+        width: auto;
+        height: auto;
+        padding: 10px;
+        background-color: white;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        /*pointer-events: none;*/
+}
+
+
+
+#tooltip p {
+  margin: 0;
+  font-family: sans-serif;;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+#attribution {
+   position: absolute;
+  top: 460px;
+/*  left: 590px;
+  width: 340px;*/
+}
+
+</style>
+<body>
+<!-- <h1>Number of Catalogue Records by Organization</h1> -->
+
+
+<!-- <div> -->
+
+<script>
+
+var width = 860,
+    height = 540,
+    padding = 1.5, // separation between same-color nodes
+    clusterPadding = 6, // separation between different-color nodes
+    maxRadius = 6.6;
+
+var format = d3.format(",d");
+
+var n, // total number of nodes
+    m = 1; // # of clusters
+
+var color = d3.scale.category20();
+
+var clusters = new Array(m);
+
+var dat ={}
+
+
+var data = {
+    resource_id: '1145c623-ff97-4383-adf5-2a12e9020ce7', // 
+};
+
+
+$.ajax({
+    async: false,
+    url: 'https://catalogue.data.gov.bc.ca/api/action/datastore_search',
+    data: data,
+    success: function(data) {
+        alldat = data['result']['records']
+        // console.log(alldat)
+        for (i = 0; i < alldat.length; i++) {
+          if (alldat[i]['record_number']==0){
+            // console.log(alldat[i]['record_number'])
+            delete alldat[i]
+          } else{
+            // console.log(alldat[i])
+        dat[alldat[i]['organization']] = alldat[i]['record_number']
+    }
+    }
+    }
+})
+
+
+
+  var nodes = [];
+
+  for (org in dat){
+        // console.log(dat[org])
+    dat[org] = Number(dat[org]);
+    if (dat[org] < 0) {
+      console.log(dat[org] )
+      nodes.push({
+        organization: org,
+        recNum: dat[org],
+        cluster: 1,
+        radius: Math.sqrt((dat[org] -1) * -1)/2 * maxRadius
+        });
+    }else{
+      nodes.push({
+        organization: org,
+        recNum: dat[org],
+        cluster: 2,
+        radius: Math.sqrt((dat[org] +14)) /2* maxRadius
+        });
+    };
+  };
+
+  // build  each cluster
+  nodes.forEach(function(d) {
+    clusters[d.cluster] = d;
+  });
+
+nodes.sort(function(a, b) {
+            return a.recNum - b.recNum;
+        });
+
+// initialize positions.
+d3.layout.pack()
+    .sort(null)
+    .size([width, height])
+    .children(function(d) { return d.values; })
+    .value(function(d) { return d.radius * d.radius; })
+    .nodes({values: d3.nest()
+      .key(function(d) { return d.cluster; })
+      .entries(nodes)});
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .size([width, height])
+    .gravity(.02)
+    .charge(0)
+    .on("tick", tick)
+    .start();
+
+// Define 'div' for tooltip
+var div = d3.select("body")
+    .append("div") 
+    .attr("class", "tooltip")     
+    .attr("id", "tooltip")           
+    .style("opacity", 0);        
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+
+var node = svg.selectAll("circle")
+    .data(nodes)
+  .enter().append("circle")
+    .style("fill", function(d) {
+      // console.log(d.organization)
+     return color(d.organization); })
+    .call(force.drag)
+    .on("mouseover", function(d){
+      var xPosition = parseFloat(d3.select(this).attr("cx"))
+      var yPosition = parseFloat(d3.select(this).attr("cy"))
+      //Update the tooltip position and value
+      // d3.select("#tooltip")
+        div.style("left", xPosition + "px")
+        .style("top", yPosition  +5+ "px")
+            .style("opacity", 1);  
+        // .select("#recNum")
+            div.html('<a target="_parent" href= https://catalogue.data.gov.bc.ca/organization/'+ d.organization +'>' + d.organization.split('-').join(' ') + ": " + format(d.recNum) + '</a>'
+                );
+        // .text(d.organization.split('-').join(' ') + ": " + format(d.recNum));
+
+        
+    //Show the tooltip
+    d3.select("#tooltip").classed("hidden", false);
+        })
+        .on("mouseout", function() {
+            // div.style("opacity", .1);  
+           
+          //Hide tooltip
+          d3.select("#tooltip").classed("hidden", true);
+        })
+        .on("dblclick", function(d){
+            parent.location.assign("https://catalogue.data.gov.bc.ca/organization/"+ d.organization, '_blank');
+        });
+
+
+var labels = svg.selectAll("text")
+  //***NEW
+  .data(nodes)
+  .enter()
+  .append("text")
+  .attr("dy", ".3em")
+  .style("text-anchor", "middle")
+  .attr({"x":function(d){
+    return d.x;},
+  "y":function(d){
+    return d.y;}})
+  .text(function(d){
+        if (d.organization.substring(0,12)=="ministry-of-"){
+            new_name = d.organization.replace("ministry-of-",'').split('-').join(' ')
+            // console.log(new_name.substring(0, d.r / 5))
+             return capitalizeFirstLet(new_name.substring(0, d.r / 5))
+        } else {
+            // console.log(d.organization)
+             return capitalizeFirstLet(d.organization.substring(0, d.r / 5))
+        }
+       ;})
+  .call(force.drag);
+
+
+
+node.transition()
+    .duration(750)
+    .delay(function(d, i) { return i * 5; })
+    .attrTween("r", function(d) {
+      var i = d3.interpolate(0, d.radius);
+      return function(t) { return d.radius = i(t); };
+    });
+
+
+// function click(d) {
+//     window.location.href = '//catalogue.data.gov.bc.ca/organization/'+d.organization
+//     console.log(d)
+//     var win = window.open('//google.ca', '_blank');
+//     win.focus();
+// }
+function capitalizeFirstLet(string) {
+    return string.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+
+
+function tick(e) {
+
+  node
+      .each(cluster(10 * e.alpha* e.alpha))
+      .each(collide(.5))
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+
+  labels.attr("x", function(d) { return d.x; })
+    .attr("y", function(d) { return d.y; });
+
+
+}
+
+// Move d to be adjacent to the cluster node.
+function cluster(alpha) {
+  return function(d) {
+    var cluster = clusters[d.cluster];
+    if (cluster === d) return;
+    var x = d.x - cluster.x,
+        y = d.y - cluster.y,
+        l = Math.sqrt(x * x + y * y),
+        r = d.radius + cluster.radius;
+    if (l != r) {
+      l = (l - r) / l * alpha;
+      d.x -= x *= l;
+      d.y -= y *= l;
+      cluster.x += x;
+      cluster.y += y;
+    }
+ //    if (cluster.cluster == 2){
+  //  cluster.y -= .05;
+  // }
+  // else
+  //  cluster.y += .05;
+  };
+}
+
+function collide(alpha) {
+  var quadtree = d3.geom.quadtree(nodes);
+  return function(d) {
+    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+        nx1 = d.x - r,
+        nx2 = d.x + r,
+        ny1 = d.y - r,
+        ny2 = d.y + r;
+    quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.x - quad.point.x,
+            y = d.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+        if (l < r) {
+          l = (l - r) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          quad.point.x += x;
+          quad.point.y += y;
+        }
+   
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    });
+  };
+}
+// d3.select("body")
+//     .append("p")
+//     .html('<a target="_parent" href= //catalogue.data.gov.bc.ca/dataset/bc-data-catalogue-content>Sourced </a> by DataBC'
+//                 )
+//     .attr("id", "attribution");
+
+</script>
+</div>
+<!--  <p>Powered by Ministry of Education, Analysis and Reporting <a target="_parent" href="//catalogue.data.gov.bc.ca/dataset/bc-data-catalogue-content">data</a> <p> -->
+<!-- <p>Powered by a DataBC <a href="https://cat.data.gov.bc.ca/dataset/bc-data-catalogue-content">dataset</a> <p> -->

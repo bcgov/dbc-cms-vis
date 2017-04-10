@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+/*.bar {
+  fill: steelblue;
+}
+*/
+/*.axis path {
+  display: none;
+}*/
+  body, html {
+    width:99%;
+    height:95%;
+  }
+  #vizcontainer {
+    width:100%;
+    height:100%;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+.axis--x path {
+  display: none;
+}
+text {
+  font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+}
+
+
+</style>
+<body>
+<div id="vizcontainer">
+<svg></svg>
+</div>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script>
+var svg = d3.select("svg").style("width", "90%").style("height", "100%");
+var margin = {
+        top: 20,
+        right: 20,
+        bottom: 30,
+        left: 40
+    },
+    screenHeight = parseFloat(d3.select("svg").node().clientHeight || d3.select("svg").node().parentNode.clientHeight);
+    screenWidth = parseFloat(d3.select("svg").node().clientWidth || d3.select("svg").node().parentNode.clientWidth);
+    // width = +svg.attr("width") - margin.left - margin.right,
+    // height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var x = d3.scaleBand()
+    .rangeRound([0, screenWidth])
+    .padding(0.1)
+    .align(0.1);
+
+var y = d3.scaleLinear()
+    .rangeRound([screenHeight-50, 40]);
+
+var z = d3.scaleOrdinal()
+    .range(["#98abc5", "#ff8c00"]);
+
+var stack = d3.stack()
+    .order(d3.stackOrderReverse);
+
+var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
+var formatTime = d3.timeFormat("%Y-%m");
+
+
+    var tooltip1 = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .style("color", "#222")
+        .style("padding", "8px")
+        .style("background-color", "white")
+        .style("border-radius", "6px")
+        .style("font", "14 px sans-serif")
+        .text("tooltip1");
+
+var data = {
+    resource_id: 'd135e8b4-df7d-4132-b411-a81d0817a5ed' // the resource id
+};
+
+
+$.ajax({
+    url: 'https://catalogue.data.gov.bc.ca/api/action/datastore_search',
+    data: data,
+    dataType: 'json',
+    success: function(data) {
+        // dat = data.result.records;
+        // console.log(data.result.records)
+
+        // for (j=0; j < 5; j++){
+            columns = ['no_mkt_trans','no_foreign']
+        //     type(data.result.records[j],j,columns)
+        // }
+        
+        
+
+// d3.csv("provincial-monthly.csv", type, function(error, data) {
+    data = data.result.records;
+    data.forEach(function(d){
+        d.no_mkt_trans = d.no_mkt_trans - d.no_foreign;
+        // console.log(d)
+        d.trans_period = formatTime(parseTime(d.trans_period))
+    })
+    data.sort(function(a, b) {
+        return b.trans_period - a.trans_period;
+    });
+
+    x.domain(data.map(function(d) {
+        return d.trans_period;
+    }));
+
+    y.domain([0, d3.max(data, function(d) {
+        // console.log(d.no_mkt_trans)
+        return d.no_mkt_trans;
+    })]).nice();
+    // console.log(columns.slice(0))
+
+    z.domain(columns.slice(1));
+
+    g.selectAll(".serie")
+        .data(stack.keys(columns.slice(0))(data))
+        .enter().append("g")
+        .attr("class", "serie")
+        .attr("fill", function(d) {
+            return z(d.key);
+        })
+        .selectAll("rect")
+        .data(function(d) {
+            return d;
+        })
+        .enter().append("rect")
+        .attr("x", function(d) {
+            return x(d.data.trans_period);
+        })
+        .attr("y", function(d) {
+            // console.log(d)
+            return y(d[1]);
+        })
+        .attr("height", function(d) {
+            return y(d[0]) - y(d[1]);
+        })
+        .attr("width", x.bandwidth()-20)
+        .on("mouseover", function(d) {
+            // console.log(d.data)
+            d3.select(this)
+                // .style("fill", "orange");
+
+
+            tooltip1.text(format(d[1]-d[0]))
+            tooltip1.style("visibility", "visible");
+
+        })
+        .on("mousemove", function() {
+            return tooltip1.style("left", (d3.event.pageX ) + "px")
+                .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function() {
+            d3.select(this)
+                // .style("fill", "steelblue");
+
+            return tooltip1.style("visibility", "hidden");
+        });
+
+    g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + (screenHeight -50)  + ")")
+        .call(d3.axisBottom(x));
+
+    g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y).ticks(6, "s"))
+        .append("text")
+        .attr("x", 2)
+        .attr("y", y(y.ticks(10).pop()))
+        .attr("dy", "-0.35em")
+        .attr("text-anchor", "start")
+        .attr("fill", "#000")
+        .text("Number of transactions");
+
+    var legend = g.selectAll(".legend")
+        .data(columns.slice(0))
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) {
+            return "translate(0," + i * 20 + ")";
+        })
+        .style("font", "16px sans-serif");
+
+    legend.append("rect")
+        .attr("x", screenWidth - 80)
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("fill", z);
+
+    legend.append("text")
+        .attr("x", screenWidth - 90)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .attr("text-anchor", "end")
+        .text(function(d) {
+            if(d == 'no_foreign'){
+                d = 'Foreign Involvement Transactions'
+            }else{
+                d = 'Non-Foreign Market Transactions'
+            }
+            return d;
+        });
+        }
+    });
+var format = d3.format(",") ;
+
+</script>

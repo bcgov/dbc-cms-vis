@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+<!--D3.js source-->
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<!--jquery source-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+
+<!--underscore source-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+<style>
+    .line { 
+      stroke: #4682b4;
+      stroke-width: 2;
+      fill: none;
+      }
+
+    .line1 { 
+      stroke: #337ab7;
+      stroke-width: 2;
+      fill: none;
+      }  
+
+    .line2 { 
+      stroke: #f0ad4e;
+      stroke-width: 2;
+      fill: none;
+      }   
+
+    .axis {
+         font-family: "Myriad Pro", "Helvetica", "Arial", sans-serif; 
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #808080;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+
+    .barProv1 {
+        fill: #66adea;
+  
+    }
+
+    .barProv2 {
+        fill: #ffc768;
+    }
+
+    div.tooltip {   
+        position: absolute;           
+        text-align: center;           
+        width: 200px;                  
+        height: 95px;                 
+        padding: 5px;             
+        font-family: "Myriad Pro", "Helvetica", "Arial", sans-serif;          
+        border: 0px;                
+        pointer-events: none;
+        background: #eee;                                               
+        box-shadow: 0 0 5px #999999;                                    
+        color: #333;          
+    } 
+
+    .parent {   
+        text-align: center; 
+        font-family: "Myriad Pro", "Helvetica", "Arial", sans-serif; 
+    }
+    .parent > .selection { 
+        margin: 0 auto;
+        padding: 1em;
+
+    }
+    .parent > .dataViz { margin: 0 auto; width: 960px; }
+
+
+</style>
+
+<body>
+    <div class="parent">
+    <div class = "selection">
+    <b>Compare completion rates for</b>
+    <select id="group1" class="selectpicker" data-style="btn-primary">
+        <option value="All Students">All Students</option>
+        <option value="Aboriginal">Aboriginal</option>
+        <option value="Non Aboriginal">Non Aboriginal</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="ELL">ELL</option>
+        <option value="Non ELL">Non ELL</option>
+        <option value="Special Needs">Special Needs</option>
+        <option value="Resident">Resident</option>
+        <option value="Non Resident">Non Resident</option>
+    </select>
+    <b>and</b>
+    <select id="group2" class="selectpicker" data-style="btn-warning">
+        <option value="Special Needs">Special Needs</option>
+        <option value="All Students">All Students</option>
+        <option value="Aboriginal">Aboriginal</option>
+        <option value="Non Aboriginal">Non Aboriginal</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="ELL">ELL</option>
+        <option value="Non ELL">Non ELL</option>
+        <option value="Resident">Resident</option>
+        <option value="Non Resident">Non Resident</option>
+    </select>
+    <b>in</b>
+    <select id="district" class="selectpicker" data-style="btn-success">
+        <option value="34">Abbotsford</option>
+        <option value="70">Alberni</option>
+        <option value="10">Arrow Lakes</option>
+        <option value="51">Boundary</option>
+        <option value="54">Bulkley Valley</option>
+        <option value="41">Burnaby</option>
+        <option value="72">Campbell River</option>
+        <option value="27">Cariboo-Chilcotin</option>
+        <option value="49">Central Coast</option>
+        <option value="23">Central Okanagan</option>
+        <option value="33">Chilliwack</option>
+        <option value="82">Coast Mountains</option>
+        <option value="71">Comox Valley</option>
+        <option value="43">Coquitlam</option>
+        <option value="79">Cowichan Valley</option>
+        <option value="93">CS Francophone</option>
+        <option value="37">Delta</option>
+        <option value="81">Fort Nelson</option>
+        <option value="78">Fraser-Cascade</option>
+        <option value="74">Gold Trail</option>
+        <option value="61">Greater Victoria</option>
+        <option value="64">Gulf Islands</option>
+        <option value="50">Haida Gwaii</option>
+        <option value="73">Kamloops/Thompson</option>
+        <option value="8">Kootenay Lake</option>
+        <option value="20">Kootenay-Columbia</option>
+        <option value="35">Langley</option>
+        <option value="42">Maple Ridge-Pitt Meadows</option>
+        <option value="75">Mission</option>
+        <option value="68">Nanaimo-Ladysmith</option>
+        <option value="91">Nechako Lakes</option>
+        <option value="40">New Westminster</option>
+        <option value="58">Nicola-Similkameen</option>
+        <option value="92">Nisga'a</option>
+        <option value="83">North Okanagan-Shuswap</option>
+        <option value="44">North Vancouver</option>
+        <option value="53">Okanagan Similkameen</option>
+        <option value="67">Okanagan Skaha</option>
+        <option value="60">Peace River North</option>
+        <option value="59">Peace River South</option>
+        <option value="47">Powell River</option>
+        <option value="57">Prince George</option>
+        <option value="52">Prince Rupert</option>
+        <option value="69">Qualicum</option>
+        <option value="28">Quesnel</option>
+        <option value="19">Revelstoke</option>
+        <option value="38">Richmond</option>
+        <option value="6">Rocky Mountain</option>
+        <option value="63">Saanich</option>
+        <option value="48">Sea to Sky</option>
+        <option value="62">Sooke</option>
+        <option value="5">Southeast Kootenay</option>
+        <option value="87">Stikine</option>
+        <option value="46">Sunshine Coast</option>
+        <option value="36">Surrey</option>
+        <option value="39">Vancouver</option>
+        <option value="85">Vancouver Island North</option>
+        <option value="84">Vancouver Island West</option>
+        <option value="22">Vernon</option>
+        <option value="45">West Vancouver</option>
+    </select>
+    </div>
+    </div>
+    
+    <div class="parent">
+    <div class="dataViz" id="area1"></div>
+    </div>
+
+<script>
+
+    var chartData = [];
+
+    var margin = {top: 20, right: 60, bottom: 50, left: 40},
+    width = 860 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;   
+
+    var barPadding = 5,
+        pad = 20;
+
+    var xLine = d3.scale.ordinal().rangeRoundBands([0,width], .1);
+
+    var yLine = d3.scale.linear().domain([100,0]).range([0,height])
+
+    //axis lines
+    var xAxisLine = d3.svg.axis().scale(xLine).tickValues(xLine.domain().filter(function(d, i) { return !(i % 2); })).orient("bottom")
+
+                    
+    var yAxisLine = d3.svg.axis().scale(yLine).orient("left")
+
+    var svg = d3.select("#area1")
+                    .append("svg")
+                    .attr("width", (width + margin.left + margin.right))
+                    .attr("height", (height + margin.top + margin.bottom))
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");              
+
+    svg.append("g")
+        .attr("class", "x axis")
+
+    svg.append("g")
+        .attr("class", "y axis")           
+
+    var line = d3.svg.line()
+        .defined(function(d) { return !isNaN(d.rate); })
+        .x(function(d) {return xLine(d.year)+xLine.rangeBand()/2;})
+        .y(function(d) {return yLine(d.rate);});
+
+    var div = d3.select("body").append("div")   
+        .attr("class", "tooltip")               
+        .style("opacity", 0); 
+  
+
+    d3.csv("https://catalogue.data.gov.bc.ca/dataset/1c6256d0-c120-4de1-817b-fb291732f8a4/resource/ed6ad97c-6369-4439-b3d6-9fe3fbcd44b8/download/completionrateminified.csv", function(error, compRate){  
+        
+        var success = 0,
+            comp_rate = 0;
+
+        compRate.forEach(function(data){ 
+                    chartData.push({
+                        year: data.YEAR_6_OF_COHORT, 
+                        dist: data.DISTRICT_NUMBER,
+                        dist_name: data.DISTRICT_NAME,
+                        data_level: data.DATA_LEVEL, 
+                        sub_pop: data.SUB_POPULATION,
+                        success: data.SUCCESS_COUNT, //+success,
+                        comp_rate: data.ESTIMATED_COMPLETION_RATE, //+comp_rate
+                        cohort: data.COHORT_COUNT
+                    })
+        })
+
+        
+
+        var sub_pop_map = { "ALL STUDENTS":"All Students",
+                            "ABORIGINAL":"Aboriginal",
+                            "NON ABORIGINAL":"Non Aboriginal",
+                            "MALE":"Male",
+                            "FEMALE":"Female",
+                            "ENGLISH LANGUAGE LEARNER":"ELL",
+                            "NON ENGLISH LANGUAGE LEARNER":"Non ELL",
+                            "SPECIAL NEEDS NO GIFTED": "Special Needs",
+                            "RESIDENT": "Resident",
+                            "NON RESIDENT": "Non Resident"
+        }
+
+        chartData.forEach(function(d){
+            d.sub_pop = sub_pop_map[d.sub_pop]
+            //console.log(d.sub_pop + ":" + sub_pop_map[d.sub_pop])
+
+        })  
+
+        svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate(-5,"+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Completion Rate %"); 
+
+        var legend1 = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + width/5 + "," + (height + margin.bottom*.75) + ")")
+
+        legend1.append('rect')
+            .attr('width', 30)
+            .attr('height', 5)
+            .style('fill', "#00000")
+        
+        legend1.append('text')
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(130,7.5)")
+                .text("Provincial Completion Rate %");
+    
+        var legend2 = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + width*(3/5) + "," + (height + margin.bottom*.75)  + ")")
+    
+        legend2.append('circle')
+            .attr("r", "5")
+            .attr("cy","2.5")
+            .style('fill', "#00000")
+    
+        legend2.append('rect')
+            .attr('width', 20)
+            .attr('height', 2)
+            .attr("transform", "translate(-10,2)")
+            .style('fill', "#00000")    
+        
+        legend2.append('text')
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(130,7.5)")
+                .text("District Completion Rate %");               
+
+        $(document).ready(function() {
+            var districtSelect = $("#district");
+            var subpopOneSelect = $("#group1");
+            var subpopTwoSelect = $("#group2");
+
+
+            districtSelect.on("change", function (selected) {
+                value = $('#district').val();
+                change(value,subpopOneSelect.val(),subpopTwoSelect.val()); 
+            });
+
+            subpopOneSelect.on("change", function (selected) {
+                value = $('#group1').val();
+                change(districtSelect.val(),value,subpopTwoSelect.val()); 
+            });
+
+            subpopTwoSelect.on("change", function (selected) {
+                value = $('#group2').val();
+                change(districtSelect.val(),subpopOneSelect.val(),value); 
+            });
+
+            change(districtSelect.val(),subpopOneSelect.val(),subpopTwoSelect.val());
+
+        });
+    })
+   
+        function change(districtSelect,subpopOneSelect,subpopTwoSelect) {
+            var finalData1 = []
+            var finalData2 = []
+            var circle1 = []
+            var circle2 = []
+            var filteredProvOne = []
+            var filteredProvTwo = []
+
+
+            xLine.domain(d3.set(chartData.map(function (d) { return d.year; })).values().sort());
+
+            var xAxisLine = d3.svg.axis().scale(xLine).tickValues(xLine.domain().filter(function(d, i) { return !(i % 2); })).orient("bottom").outerTickSize(0)
+                    
+            var yAxisLine = d3.svg.axis().scale(yLine).orient("left")
+
+            svg.select('.x.axis').call(xAxisLine).attr("transform", "translate(" + margin.left + "," + height + ")");
+
+            svg.select(".y.axis").call(yAxisLine).attr("transform", "translate(" + margin.left + ",0)");
+         
+            chartData.forEach(function(d){
+                if(d.dist == districtSelect){
+                        if(d.sub_pop == subpopOneSelect){
+                            finalData1.push({
+                                year: d.year,
+                                rate: d.comp_rate,
+                                cohort_size: d.cohort,
+                                dist: d.dist_name,
+                                sub_pop: d.sub_pop
+                            })
+                        }
+                        if(d.sub_pop == subpopTwoSelect){
+                            finalData2.push({
+                                year: d.year,
+                                rate: d.comp_rate,
+                                cohort_size: d.cohort,
+                                dist: d.dist_name,
+                                sub_pop: d.sub_pop
+
+                        })
+                    }
+                }
+            }) 
+         
+
+            chartData.forEach(function(d){
+                if(d.sub_pop == subpopOneSelect && d.data_level == 'PROVINCE LEVEL'){
+                    filteredProvOne.push({
+                                year: d.year,
+                                comp_rate: d.comp_rate,
+                                cohort: d.cohort,
+                                dist: "Province",
+                                sub_pop: d.sub_pop
+                            })
+                }
+            });
+
+            chartData.forEach(function(d){
+                if(d.sub_pop == subpopTwoSelect && d.data_level == 'PROVINCE LEVEL'){
+                    filteredProvTwo.push({
+                                year: d.year,
+                                comp_rate: d.comp_rate,
+                                cohort: d.cohort,
+                                dist: "Province",
+                                sub_pop: d.sub_pop
+                            })
+                }
+            });
+         
+            var bar1 = svg.selectAll(".barProv1").data(filteredProvOne)
+
+            bar1.enter()
+                .append("rect")
+                .attr("class","barProv1")
+                .attr("width", 30)
+                .attr("height", 5)
+                //.attr("fill", "#1f77b4");
+                
+
+            bar1/*.transition()*/.attr("transform", function(d,i){
+                    x = xLine(d.year)+xLine.rangeBand()/2+margin.left-15;
+                    y = yLine(d.comp_rate)-2.5;
+                    return "translate("+ x +","+ y +")"
+            })
+            .on("mouseover", function(d) {      
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .html("Province" + "<br/>" + d.sub_pop + "<br/>"
+                                + "School year: "+d.year+ "<br/>" 
+                                + "Completion rate: " + d.comp_rate + "%" + "<br/>"
+                                + "Cohort size: " + d.cohort
+                                )  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                    })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);   
+                });
+
+            bar1.exit().remove();
+
+            var bar2 = svg.selectAll(".barProv2").data(filteredProvTwo)
+
+            bar2.enter()
+                .append("rect")
+                .attr("class","barProv2")
+                .attr("width", 30)
+                .attr("height", 5)
+                //.attr("fill", "#1f77b4");
+                
+
+            bar2/*.transition()*/.attr("transform", function(d,i){
+                    x = xLine(d.year)+xLine.rangeBand()/2+margin.left-15;
+                    y = yLine(d.comp_rate)-2.5;
+                    return "translate("+ x +","+ y +")"
+            })
+            .on("mouseover", function(d) {      
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .html("Province" + "<br/>" + d.sub_pop + "<br/>"
+                                + "School year: "+d.year+ "<br/>" 
+                                + "Completion rate: " + d.comp_rate + "%" + "<br/>"
+                                + "Cohort size: " + d.cohort
+                                )  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                    })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);   
+                });
+
+            bar2.exit().remove();
+         
+            var line1 = svg.selectAll(".line1").data([finalData1]).attr("class","line1");
+
+            line1.attr("d",line)//.transition()//.duration(500)
+
+            // enter any new data
+            line1.enter()
+                .append("path")
+                .attr("class","line1")
+                .attr("d",line)
+                .attr("transform", "translate(" + margin.left + ",0)")
+            
+            // exit
+            line1.exit().remove();
+
+            var line2 = svg.selectAll(".line2").data([finalData2]).attr("class","line2");
+
+            line2.attr("d",line)//.transition().duration(5000)
+           
+
+            // enter any new data
+            line2.enter()
+                .append("path")
+                .attr("class","line2")
+                .attr("d",line)
+                .attr("transform", "translate(" + margin.left + ",0)")
+            
+            // exit
+            line2.exit().remove();
+            //a rate of -99 indicates masked data
+            finalData1.filter(function(d){
+                if(d.rate === 'MSK'){
+                    circle1.push({
+                        year: d.year,
+                        rate: -99,
+                        dist: d.dist,
+                        cohort_size: d.cohort_size,
+                        sub_pop: d.sub_pop
+                    })
+                }else{
+                    circle1.push({
+                        year: d.year,
+                        rate: +d.rate,
+                        dist: d.dist,
+                        cohort_size: d.cohort_size,
+                        sub_pop: d.sub_pop
+                    })
+                }
+            })
+            //a rate of -99 indicates masked data
+            finalData2.filter(function(d){
+                if(d.rate === 'MSK'){
+                    circle2.push({
+                        year: d.year,
+                        rate: -99,
+                        dist: d.dist,
+                        cohort_size: d.cohort_size,
+                        sub_pop: d.sub_pop
+                    })
+                }else{
+                    circle2.push({
+                        year: d.year,
+                        rate: +d.rate,
+                        dist: d.dist,
+                        cohort_size: d.cohort_size,
+                        sub_pop: d.sub_pop
+                    })
+                }
+            })
+ 
+            var circles1 = svg.selectAll(".circleOne").data(circle1);
+
+                circles1.enter().append("circle").attr("class","circleOne").attr("fill", "#337ab7")
+
+                circles1//.transition()//.duration(500)
+                .attr("cx",line.x())
+                .attr("cy",line.y())
+                .attr("r", function(d){ return 5})
+                .attr("transform", "translate(" + margin.left + ",0)")
+                .on("mouseover", function(d) {      
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div.html(d.dist+ "<br/>" + d.sub_pop + "<br/>"
+                                + "School year: "+d.year+ "<br/>"
+                                + "Completion rate: " + d.rate + "%" + "<br/>"
+                                + "Cohort size: " + d.cohort_size)  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                    })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);   
+                });
+
+                circles1.exit().remove();
+                
+
+            var circles2 = svg.selectAll(".circleTwo").data(circle2);
+
+                circles2.enter().append("circle").attr("class","circleTwo").attr("fill", "#f0ad4e");
+                
+                circles2//.transition().duration(500)
+                .attr("cx",line.x())
+                .attr("cy",line.y())
+                .attr("r", function(d){ return 5})
+                .attr("transform", "translate(" + margin.left + ",0)")
+                .on("mouseover", function(d) {      
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                    div .html( d.dist+ "<br/>" + d.sub_pop + "<br/>"
+                                + "School year: "+d.year+ "<br/>"
+                                + "Completion rate: " + d.rate + "%" + "<br/>"
+                                + "Cohort size: " + d.cohort_size)  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                    })                  
+                .on("mouseout", function(d) {       
+                    div.transition()        
+                        .duration(500)      
+                        .style("opacity", 0);   
+                });
+   
+                    
+                circles2.exit().remove();   
+
+        }
+
+    
+ </script>          
