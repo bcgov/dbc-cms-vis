@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  body, html {
+    width:100%;
+    height:100%;
+  }
+  #vizcontainer {
+    width:100%;
+    height:100%;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+form {
+    position: absolute;
+    right: 10%;
+    top: 100px;
+}
+
+
+text {
+  font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+}
+
+label {
+  display: block;
+}
+
+</style>
+<form>
+  <label><input type="radio" name="mode" value="grouped"> Grouped</label>
+  <label><input type="radio" name="mode" value="stacked" checked> Stacked</label>
+</form>
+<body>
+<div id="vizcontainer">
+<svg></svg>
+</div>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script>
+
+
+var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
+var formatTime = d3.timeFormat("%Y-%m");
+
+
+var tooltip1 = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("color", "#222")
+    .style("padding", "8px")
+    .style("background-color", "white")
+    .style("border-radius", "6px")
+    .style("font", "14 px sans-serif")
+    .text("tooltip1");
+
+var columns = ['no_lt1M_foreign', 'no_gt1M_foreign', 'no_gt3M_foreign'];
+
+var data = {
+    resource_id: '099288eb-4a09-43eb-8dc2-72586808f70f', // the resource id
+    fields: 'trans_period,no_lt1M_foreign,no_gt1M_foreign,no_gt3M_foreign'
+};
+
+
+$.ajax({
+    url: 'https://catalogue.data.gov.bc.ca/api/action/datastore_search',
+    data: data,
+    dataType: 'json',
+    success: function(data) {
+        data = data.result.records;
+        // console.log(data)
+
+        var valueClass = d3.keys(data[0]).filter(function(key) {
+            return key !== "trans_period";
+        });
+        console.log(valueClass)
+        data.forEach(function(d) {
+            d.trans_period = formatTime(parseTime(d.trans_period))
+            d.vals = valueClass.map(function(name) {
+                return {
+                    name: name,
+                    value: +d[name]
+                };
+            });
+        });
+
+        n = columns.length
+        var xz = data.map(function(d) {
+                return formatTime(parseTime(d.trans_period));
+            }),
+            // yz = d3.range(valueClass).map(function() { return bumps(m); }),
+            y01z = d3.stack().keys(columns.slice(0))(data),
+            yMax = d3.max(data, function(d) {
+                return d3.max(d.vals, function(d) {
+                    return d.value;
+                });
+            }),
+            y1Max = d3.max(y01z, function(y) {
+                console.log(y)
+                return d3.max(y, function(d) {
+                    return d[1];
+                });
+            });
+
+        var svg = d3.select("svg").style("width", "90%").style("height", "90%");
+        var margin = {
+                top: 20,
+                right: 20,
+                bottom: 40,
+                left: 40
+        },
+        screenHeight = parseFloat(d3.select("svg").node().clientHeight || d3.select("svg").node().parentNode.clientHeight);
+        screenWidth = parseFloat(d3.select("svg").node().clientWidth || d3.select("svg").node().parentNode.clientWidth);
+
+                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var x = d3.scaleBand()
+            .domain(data.map(function(d) {
+                return d.trans_period
+            }))
+            .rangeRound([0, screenWidth])
+            .padding(0.1)
+            .align(0.1);
+
+        var y = d3.scaleLinear()
+            .domain([0, y1Max])
+            .range([screenHeight-50,0]);
+
+        var xAxis = d3.axisBottom()
+            .scale(x)
+            .tickSize(0)
+            .tickPadding(0.1);
+
+        var yAxis = d3.axisLeft(y).ticks(6, "s");
+
+        var color = d3.scaleOrdinal()
+            .domain(d3.range(n))
+            .range(d3.schemeCategory20c);
+
+        var series = g.selectAll(".series")
+            .data(y01z)
+            .enter().append("g")
+            .attr("fill", function(d, i) {
+                return color(i);
+            });
+
+        var rect = series.selectAll("rect")
+            .data(function(d) {
+                return d;
+            })
+            .enter().append("rect")
+            .attr("x", function(d, i) {
+                return x(d.data.trans_period);
+            })
+            .attr("y", screenHeight)
+            .attr("width", x.bandwidth())
+            .attr("height", 0)
+            .on("mouseover", function(d) {
+                console.log(d)
+                d3.select(this)
+                    // .style("fill", "orange");
+
+
+                tooltip1.text(d[1] - d[0])
+                tooltip1.style("visibility", "visible");
+
+            })
+            .on("mousemove", function() {
+                return tooltip1.style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 50) + "px");
+            })
+            .on("mouseout", function() {
+                d3.select(this)
+                    // .style("fill", "steelblue");
+
+                return tooltip1.style("visibility", "hidden");
+            });
+
+        rect.transition()
+            .delay(function(d, i) {
+                return i * 10;
+            })
+            .attr("y", function(d) {
+                return y(d[1]);
+            })
+            .attr("height", function(d) {
+                return y(d[0]) - y(d[1]);
+            });
+
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + (screenHeight-50) + ")")
+            .call(d3.axisBottom(x)
+                .tickSize(0)
+                .tickPadding(6));
+
+        g.append("g")
+            .attr("class", "axis axis--y")
+            .call(yAxis)
+            .append("text")
+            .attr("x", 2)
+            .attr("y", y(y.ticks(8).pop()))
+            .attr("dy", "-0.95em")
+            .attr("text-anchor", "start")
+            .attr("fill", "#000")
+            .text("Number of Foreign Involvement Transactions");
+
+        d3.selectAll("input")
+            .on("change", changed);
+
+        var timeout = d3.timeout(function() {
+            d3.select("input[value=\"grouped\"]")
+                .property("checked", true)
+                .dispatch("change");
+        }, 2000);
+
+        function changed() {
+            timeout.stop();
+            if (this.value === "grouped") transitionGrouped();
+            else transitionStacked();
+        }
+
+        function transitionGrouped() {
+            y.domain([0, yMax]);
+
+            rect.transition()
+                .duration(500)
+                .delay(function(d, i) {
+                    return i * 10;
+                })
+                .attr("x", function(d, i) {
+                    // console.log(x(d.data.trans_period)+ x.bandwidth() / n * this.parentNode.__data__.index)
+                    return x(d.data.trans_period) + x.bandwidth() / n * this.parentNode.__data__.index;
+                })
+                .attr("width", x.bandwidth() / n)
+                .transition()
+                .attr("y", function(d) {
+                    return y(d[1] - d[0]);
+                })
+                .attr("height", function(d) {
+                    return y(0) - y(d[1] - d[0]);
+                });
+               
+            g.selectAll(".axis.axis--y").transition()
+                .delay(function(d, i) {
+                    console.log(i)
+                        return i * 10;
+                    })
+                .duration(500)
+                .call(yAxis)
+        }
+
+        function transitionStacked() {
+            y.domain([0, y1Max]);
+
+            rect.transition()
+                .duration(500)
+                .delay(function(d, i) {
+                    return i * 10;
+                })
+                .attr("y", function(d) {
+                    return y(d[1]);
+                })
+                .attr("height", function(d) {
+                    return y(d[0]) - y(d[1]);
+                })
+                .transition()
+                .attr("x", function(d, i) {
+                    return x(d.data.trans_period);
+                })
+                .attr("width", x.bandwidth());
+
+            g.selectAll(".axis.axis--y").transition()
+                .delay(function(d, i) {
+                    console.log(i)
+                        return i * 10;
+                    })
+                .duration(500)
+                .call(yAxis)
+        }
+
+        var legend = svg.selectAll(".legend")
+            .data(valueClass.slice().reverse())
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) {
+                return "translate(0," + i * 20 + ")";
+            });
+
+        legend.append("rect")
+            .attr("x", screenWidth - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", function(d, i) {
+                return color(i)
+            });
+
+        legend.append("text")
+            .attr("x", screenWidth - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) {
+                if (d == 'no_gt3M_foreign') {
+                    d = 'Over $3 million '
+                } else if (d == 'no_gt1M_foreign') {
+                    d = '$1 million - $3 million '
+                } else {
+                    d = 'Under $1 million'
+                }
+                return d;
+            });
+    }
+});
+</script>
