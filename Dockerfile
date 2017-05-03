@@ -16,4 +16,6 @@ RUN apk del --purge alpine-sdk
 
 USER app
 EXPOSE 5000
+
 CMD serve -s -C -S -i / /app
+
