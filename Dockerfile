@@ -16,4 +16,6 @@ RUN apk del --purge alpine-sdk
 
 USER app
 EXPOSE 5000
-CMD serve -C -S -i Dockerfile /app
+
+CMD serve -s -C -S -i / /app
+
