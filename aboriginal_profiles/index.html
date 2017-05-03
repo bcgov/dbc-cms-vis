@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<title>BCDC Datapusher Table</title>
+
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="bootstrap-table-filter-control.js"></script>
+
+
+<body>
+    <div class="container">
+        <div class="header">
+            <ul class="nav nav-pills pull-right">
+            </ul>
+        </div>
+
+        <div class="row marketing">
+            <div class="col-lg-8">
+
+            </div>
+        </div>
+
+        <div class="row marketing">
+            <div class="col-lg-8">
+                <!--    <h4>All Public Records</h4>
+            <p>The table below is taken live from the BC Data Catalogue content. </p> -->
+
+                <!--  <select id="station">
+            <option value="databc" selected>databc</option>
+          </select> -->
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+            <table id="orders-table" class="table table-striped" data-filter-control="true" data-pagination="true" data-page-size="4" data-page-list="[10, 20, 50]" data-search="true">
+                <thead>
+
+                    <tr>
+                        <th data-field="DataYear" data-sortable="true" data-filter-control="select">Year</th>
+                        <th data-field="RegionType" data-sortable="true" data-filter-control="select">Region Type</th>
+                        <th data-field="RegionName" data-sortable="true">Region Name</th>
+                        <th data-field="Description" data-sortable="true" data-filter-control="select">Description</th>
+<!--                        <th data-field="title" data-formatter="LinkFormatter" data-sortable="true">Title</th>-->
+                        <th data-field="title" data-sortable="true">Title</th>
+                        <th data-field="FileSize" data-sortable="true">File Size</th>
+                        <th data-field="url1" data-formatter="PDFLink" data-sortable="true">URL (PDF)</th>
+                        <th data-field="url2" data-formatter="XLSLink" data-sortable="true">URL (xlsx)</th>
+                        
+                        
+<!--                        <th data-field="publishDate" data-sortable="true">Publish Date</th>-->
+                      
+                    </tr>
+                </thead>
+                <tbody class="searchable">
+
+
+                    <div id='spinner' class='spinner'></div>
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="footer">
+
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var alldat, tab;
+
+        function PDFLink(value, row, index) {
+             console.log(value)
+            if (value == '') {
+                value = 'Name not available'
+
+            }
+            return "<a href=http://" + value + ">" + 'pdf' + "</a>";
+        }
+
+        function XLSLink(value, row, index) {
+             console.log(value)
+            if (value == '') {
+                value = 'Name not available'
+
+            }
+            return "<a href=http://" + value + ">" + 'xlsx' + "</a>";
+        }
+
+        
+        var smallDat = []
+
+        var data = {
+            resource_id: 'be20dda7-e895-490e-acd2-3cde6dfb382e', // the resource id
+            limit: 2000
+        };
+
+        newdat = []
+        url = 'https://catalogue.data.gov.bc.ca/api/action/datastore_search';
+        $.ajax({
+            async: false,
+            url: url,
+            data: data,
+            success: function(data) {
+                alldat = data.result.records
+                $.each(alldat, function(key, value) {
+                        smallDat.push({
+                                DataYear: value['DataYear'],
+                                RegionType: value['RegionType'],
+                                RegionName: value['RegionName'],
+                                Description: value['Description'],
+                                title: value['Title'],
+                                FileSize: value['FileSize'],
+                                url1: value['URL1'],
+                                url2: value['URL2']
+                            })
+                            //     if (value == 'name'){
+                            //     console.log(value['sector'])
+                            // }
+                    })
+                    // if (target) spinner.stop();
+            }
+        });
+
+        $(function() {
+            console.log(smallDat)
+            $('#orders-table').bootstrapTable({
+                data: smallDat
+            });
+        });
+    </script>
+
+
+
+</body>
+
+</html>
