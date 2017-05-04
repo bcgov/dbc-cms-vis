@@ -25,9 +25,7 @@ You can now embed the url of your visualiation https://qa-galleries.data.gov.bc.
 
 ## Production Environment
 Once you have finsihed developing in the QA environment and you are ready to move your visualization to Production, type
-*'READY FOR PROD'*
-as your Pull Request title. 
-
-will be added to the production repo on github - https://github.com/bcgov/dbc-cms-vis/tree/gh-pages and your visiable at https://galleries.data.gov.bc.ca/$PACKAGE_ID-vis#
+**'READY FOR PROD'**
+as your PR title. When we merge your PR we will then know to move your visualziation to the production repo on github - https://github.com/bcgov/dbc-cms-vis/tree/gh-pages. Your visualization will be available here: https://galleries.data.gov.bc.ca/$PACKAGE_ID-vis#
 
 You can embed these visualizations in your produciton CMS Lite page.
