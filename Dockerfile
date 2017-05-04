@@ -3,7 +3,7 @@ MAINTAINER leo.lou@gov.bc.ca
 
 RUN apk update \
   && apk add nodejs \
-  && npm install -g serve
+  && npm install -g http-server
 
 RUN mkdir -p /app
   
@@ -16,4 +16,4 @@ RUN apk del --purge alpine-sdk
 
 USER app
 EXPOSE 5000
-CMD serve -C -S -i Dockerfile /app
+CMD http-server /app -p 5000 -d -s -g --cors -r
