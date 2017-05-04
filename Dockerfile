@@ -22,7 +22,7 @@ COPY ./Caddyfile /etc/Caddyfile
 
 RUN mkdir -p /app  
 WORKDIR /app
-ADD . /app
+COPY */ /app/
 
 RUN adduser -S app
 RUN chown -R app:0 /app && chmod -R 770 /app
