@@ -1,0 +1,9 @@
+0.0.0.0:5000
+
+root /app
+
+log stdout
+
+errors stdout
+
+ext .html .htm
