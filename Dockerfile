@@ -18,11 +18,10 @@ RUN curl --silent --show-error --fail --location \
 
 #Copy over a default Caddyfile
 COPY ./Caddyfile /etc/Caddyfile
-
-
 RUN mkdir -p /app  
 WORKDIR /app
-COPY */ /app/
+ADD . /app
+RUN rm /app/*md /app/*file
 
 RUN adduser -S app
 RUN chown -R app:0 /app && chmod -R 770 /app
