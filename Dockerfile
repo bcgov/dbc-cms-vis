@@ -20,8 +20,7 @@ RUN curl --silent --show-error --fail --location \
 COPY ./Caddyfile /etc/Caddyfile
 
 
-RUN mkdir -p /app
-  
+RUN mkdir -p /app  
 WORKDIR /app
 ADD . /app
 
@@ -31,5 +30,5 @@ RUN apk del --purge devs
 
 USER app
 EXPOSE 5000
-
+ENTRYPOINT ["/usr/bin/caddy"]
 CMD ["caddy", "-quic", "--conf", "/etc/Caddyfile"]
