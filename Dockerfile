@@ -16,4 +16,4 @@ RUN apk del --purge alpine-sdk
 
 USER app
 EXPOSE 5000
-CMD http-server /app -p 5000 -d -s -g --cors -r
+CMD http-server /app -p 5000 -d false -s -g true --cors -r -e html
