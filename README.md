@@ -1,9 +1,8 @@
 # dbc-cms-vis
 
-staging for embeddable interactive visualizations, released production in GitHub
-https://github.com/bcgov/dbc-cms-vis/ 
+Staging for embeddable interactive visualizations.
 
-## How to embedd Tables and Visualizations to CMS Lite
+## How to create Tables and Visualizations that can be embeded in CMS Lite
 ## All visualizations are required to source the data from the [BC Data Catalogue](https://catalogue.data.gov.bc.ca/dataset)
 
 These instructions assume you have a gogs and github account and that you have a basic knowledge of git. You can create a gogs account at https://gogs.data.gov.bc.ca. For info on git see http://rogerdudler.github.io/git-guide/.
