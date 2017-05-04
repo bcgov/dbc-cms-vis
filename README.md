@@ -26,4 +26,4 @@ You can now embed the url of your visualiation https://qa-galleries.data.gov.bc.
 ## Production Environment
 Once you have finsihed developing in the QA environment your visualization will be added to the production repo on github - https://github.com/bcgov/dbc-cms-vis/tree/gh-pages and your visiable at https://galleries.data.gov.bc.ca/$PACKAGE_ID-vis#
 
-As you did for QA, fork the repo, add your new directory and commit your files and submit a PR to merge. Once your PR has been merged your visualization will be publically visible at https://galleries.data.gov.bc.ca/$PACKAGE_ID-vis#. You can embed these in your produciton CMS Lite page.
+You can embed these visualizations in your produciton CMS Lite page.
