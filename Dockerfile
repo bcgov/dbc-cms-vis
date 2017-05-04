@@ -30,3 +30,4 @@ RUN apk del --purge devs
 USER app
 EXPOSE 5000
 CMD ["caddy", "-quic", "--conf", "/etc/Caddyfile"]
+
