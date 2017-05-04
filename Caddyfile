@@ -7,3 +7,5 @@ log stdout
 errors stdout
 
 ext .html .htm
+
+rewrite / https://data.gov.bc.ca
