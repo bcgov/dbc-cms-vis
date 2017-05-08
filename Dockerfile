@@ -2,6 +2,7 @@ FROM alpine:edge
 MAINTAINER leo.lou@gov.bc.ca
 
 ARG plugins=http.cors,http.git,http.hugo,http.realip
+ARG http_port=5000
 
 RUN apk update \
     && apk --no-cache add git openssh-client \
@@ -16,8 +17,8 @@ RUN curl --silent --show-error --fail --location \
  && /usr/bin/caddy -version
 
 
-#Copy over a default Caddyfile
-COPY ./Caddyfile /etc/Caddyfile
+#create a default Caddyfile
+RUN printf "0.0.0.0:$http_port\nroot /app\nlog stdout\nerrors stdout\next .html .htm" > /etc/Caddyfile
 RUN mkdir -p /app  
 WORKDIR /app
 ADD . /app
@@ -28,6 +29,5 @@ RUN chown -R app:0 /app && chmod -R 770 /app
 RUN apk del --purge devs  
 
 USER app
-EXPOSE 5000
+EXPOSE $http_port
 CMD ["caddy", "-quic", "--conf", "/etc/Caddyfile"]
-
