@@ -83,7 +83,7 @@
         var alldat, tab;
 
         function PDFLink(value, row, index) {
-             console.log(value)
+             // console.log(value)
             if (value == '') {
                 value = 'Name not available'
 
@@ -92,14 +92,14 @@
         }
 
         function XLSLink(value, row, index) {
-             console.log(value)
+             // console.log(value)
             if (value == '') {
                 value = 'Name not available'
-
-            }
+             // console.log(value)
+            }else{
             return "<a href=http://" + value + ">" + 'xlsx' + "</a>";
-        }
-
+            }
+		}
         
         var smallDat = []
 
