@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <met charset="utf-8">
   <head>
     <meta charset="utf-8"/>
@@ -354,9 +355,7 @@
                   <!--                        <th data-field="publishDate" data-sortable="true">Publish Date</th>-->
                </tr>
             </thead>
-            <tbody class="searchable">
-               <!-- <div id='spinner' class='spinner'></div> -->
-            </tbody>
+        
          </table>
       </div>
 <!--  -->
@@ -386,7 +385,12 @@
 <!-- </div> -->
 </div>
 </div>
-
+<script type="text/javascript">
+if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1))
+{
+  alert("This visualization has been designed for optimal use with the latest Mozilla Firefox and Google Chrome browsers. Please download Chrome or Firefox to view.");
+}
+</script>
    <script src="main.js"></script>
    <!-- <script></script> -->
    <script src="table.js"></script>

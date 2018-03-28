@@ -1,3 +1,4 @@
+
 margin = {
     top: 20,
     right: 20,
@@ -247,58 +248,10 @@ d3.json("can_no_projs.json", function(error, canada) {
     var tot;
     var int, yearMenu, bc_data;
 
-    // var currYear = '2017'
-    // var currQ = '4'
+
     var international;
 
-    // var data = {
-    //     resource_id: '2aa0f35f-8db4-46f7-98ef-8913b7c06dca', // the resource id
-    //     limit: 5000, // get 5 results
-    //     filters: '{"Year":' + currYear + ',"Quarter":"' + currQ + '"}'
-    // };
-    // $.ajax({
-    //     url: 'https://cat.data.gov.bc.ca/api/3/action/datastore_search',
-    //     data: data,
-    //     dataType: 'json',
-    //     success: function(data) {
-    //         international = data.result.records;
-    //         // console.log(international)
-    //          bc_data = []
-
-    //         var data = {
-    //             resource_id: '8bc04574-3b36-4d22-9b36-5a177ba0bcc3', // the resource id
-    //             limit: 5000,
-    //             filters: '{"Year":' + currYear + ',"Quarter":"' + currQ + '"}'
-    //         };
-    //         $.ajax({
-    //             url: 'https://cat.data.gov.bc.ca/api/3/action/datastore_search',
-    //             data: data,
-    //             dataType: 'json',
-    //             success: function(data) {
-    //                 // console.log(data.result.records.filter(function(d) {
-    //                 //     return d.Origin == "B.C. - C.-B.";
-    //                 // }))
-    //                 // bc = data.result.records.filter(function(d) {
-    //                 //     return d.Origin == "B.C.";
-    //                 // })
-    //                 // console.log(bc)
-    //                 // if(d.Origin = "B.C. - C.-B."){
-    //                 //     Province:
-    //                 // }
-    //                 // test = data.result.records)
-    //                 // console.log(data.result.records)
-    //                 data.result.records.forEach(d =>
-    //                 {bc=data.result.records.filter(j => {
-    //                     return j.Origin == "B.C." && j.Year == d.Year && j.Quarter == d.Quarter})
-    //                     bc_data.push({
-    //                         Province: d.Origin,
-    //                         Origin: d["B.C."],
-    //                         Destination: bc[0][d.Origin],
-    //                         Year: d.Year,
-    //                         Quarter: d.Quarter
-    //                     })
-    //                 }
-    //                 )
+ 
 
     var yr = [];
     for (var i = 1971; i <= 2017; i++) {
@@ -311,20 +264,7 @@ d3.json("can_no_projs.json", function(error, canada) {
         return q[Math.floor(d.getMonth() / 3)] - 1;
     }
 
-    // test = bc_data
-    // console.log(getQuarter())
-    // var yr = d3.map(bc_data, function(d) {
-    //     return d.Year;
-    // }).keys()
-    // var Qrt = d3.map(bc_data, function(d) {
-    //     return d.Quarter;
-    // }).keys()
-    // console.log(yr[yr.length - 1])
-    //    yr.forEach(function(d){
-    //     var option = $('<option />').text(d);
-
-    //     $("#year").append(option);
-    // })     
+   
     yearMenu = d3.select("#yearDropdown");
     yearMenu
         // .append("select")
@@ -367,15 +307,11 @@ d3.json("can_no_projs.json", function(error, canada) {
         .property("selected", function(d) {
             return d == default_option;
         });
-    // migration = alldata.filter(function(d) {
-    //     return d.time_period == currYear;
-    // })
+
+
     currYear = $('#yearDropdown').val();
     currQ = $('#QDropdown').val();
-    console.log(currQ)
-    // console.log(bc_data)
 
-    // International data
     var data = {
         resource_id: 'c99d63f6-5ec4-4ac0-9c07-c0352f2f1928', // the resource id
         limit: 5000, // get 5 results
@@ -387,7 +323,7 @@ d3.json("can_no_projs.json", function(error, canada) {
         dataType: 'json',
         success: function(data) {
             international = data.result.records;
-            console.log(international)
+            // console.log(international)
             var bc_data = [];
             // var international;
 
@@ -402,7 +338,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                 data: data,
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data)
+                    // console.log(data)
 
                     data.result.records.forEach(d => {
                         bc = data.result.records.filter(j => {
@@ -526,28 +462,11 @@ d3.json("can_no_projs.json", function(error, canada) {
         })
 
     function update(migration, currYear, currQ) {
-        // migration = migration.filter(function(d) {
-        //     return d.Year == currYear && d.Quarter == currQ && d.Province != "B.C.";
-        // })
-        // int = international.filter(function(d) {
-        //     return d.Year == currYear && d.Quarter == currQ;
-        // })
-        // // migration.net_int = int[0]['Total net migration']
-        // migration.push({
-        //     Province: 'International',
-        //     Origin: int[0]['Total immigration'],
-        //     Destination: int[0]['Total emigration'],
-        //     Quarter: currQ,
-        //     Year: currYear
-        //     // net1: int[0]['Total net migration']
-        // })
-        console.log('here')
-        // console.log(int[0]['Total net migration'])
+
 
         d3.selectAll('.route').remove()
         d3.selectAll('.annotation-group').remove()
         $('#orders-table').bootstrapTable("destroy");
-        // d3.selectAll('.bootstrap-table').remove()
         int = 0;
         tot = 0;
         migration.forEach(function(d) {
@@ -560,7 +479,6 @@ d3.json("can_no_projs.json", function(error, canada) {
             }
 
         })
-        // console.log(migration)
 
         flow_dat = topojson.feature(canada, canada.objects.cangeo).features
         flow_dat.forEach(function(d) {
@@ -572,11 +490,11 @@ d3.json("can_no_projs.json", function(error, canada) {
             }
             if (d.properties.PRENAME == 'Saskatchewan') {
                 cen[1] = cen[1] - 1.2
-                console.log(cen)
+                // console.log(cen)
             }
             if (d.properties.PRENAME == 'Manitoba') {
                 cen[1] = cen[1] - 2.2
-                console.log(cen)
+                // console.log(cen)
             }
             if (d.properties.PRENAME == 'New Brunswick') {
                 cen[1] = cen[1] - 1
@@ -592,34 +510,13 @@ d3.json("can_no_projs.json", function(error, canada) {
                 coords: cen
             })
         })
-        // console.log(flow_dat)
-        // currYear = $('#yearDropdown').val();
-        // $(document).ready(function() {
 
-
-
-
-
-        // yearMenu.on('change', function() {
-        //     var currYear = d3.select(this)
-        //         .select('select')
-        //         .property('value');
-        //     console.log(currYear)
-        //     update(bc_data,international, currYear, currQ)
-        // })
-
-
-        // var tooltip = d3.select("body").append("div")
-        //     .attr("class", "tooltip")
-        //     .style("opacity", 0);
         tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
 
         route_path = g.selectAll(".route")
-            // .data(migration.filter(function(d) {
-            //     return d.Province != 'International';
-            // }))
+
             .data(migration)
             .enter()
             .append("path")
@@ -700,57 +597,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                 // console.log(Math.abs((Number(d.Origin) - Number(d.Destination))))
                 return line_size(Math.abs((Number(d.Origin) - Number(d.Destination))));
             }).on('mouseover', highlightLines)
-            .on('mouseout', unHighlight)
-        // .style("opacity", .8)
-
-        // .on("mouseout", function(d) {
-        //     tooltip.style("display", "none");
-        // })
-
-        // .on("mousemove", function(d) {
-        //       tooltip
-        //           .style("left", d3.event.pageX - 50 + "px")
-        //           .style("top", d3.event.pageY - 70 + "px")
-        //           .style("display", "inline")
-        //           .style("opacity", 1)
-        //           .html(d.Province + "<br>" + 'Net change: ' + (d.net))
-        //           // .html('Net: ' + (d.net) + "<br>" + 'Loss: ' + (d.Destination));
-        //   })
-        // .raise()
-
-        // map.on("mouseover", function(d) {
-        //     if (d.properties.PRENAME != "British Columbia"){
-        //         curr_net = migration.filter(function(j) {
-
-        //         return prov_lookup[j.Province] == d.properties.PRENAME
-        //     })
-        //     // console.log(curr_net)
-        //     if (curr_net[0].Province != 'B.C.') {
-
-        //    svg.append("text")
-        //             .attr("x", width - 204)
-        //             .attr("y", 100.5)
-        //             .attr("dy", "0.32em")
-        //             .attr("class",'lab')
-        //             .text(d.properties.PRENAME );
-
-        //   svg.append("text")
-        //             .attr("x", width - 204)
-        //             .attr("y", 120.5)
-        //             .attr("dy", "0.32em")
-        //             .attr('class', 'lab')
-        //             .text('Net change: ' + (curr_net[0].net))
-
-        //             // .attr("x", (width / 4))   ;
-
-        //     }
-        //     }
-        //     // .html('Net: ' + (d.net) + "<br>" + 'Loss: ' + (d.Destination));
-        // }).on("mouseout",function(d){
-        //     // tooltip.style("display", "none");
-        //     d3.selectAll(".lab").remove()
-        // })
-
+            .on('mouseout', unHighlight);
 
         function pointAtLength(path, l) {
             var xy = path.getPointAtLength(l);
@@ -786,20 +633,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                     return "translate(" + p + ") rotate( " + angleAtLength(pa, pa.getTotalLength() * d) + ")";
                 });
 
-            // .append("path")
-            // .attr('d', 'M0,-5L10,0L0,5')
-            // .style('fill', function(d) {
-            //     // console.log(d)
-            //     if (j.net > 0) {
-            //         return "#3f51b5";
-            //     } else {
-            //         return "#D32F2F";
-            //     }
-            // })
-            // .style("opacity", .9)
-            // .attr('id', 'arrow')
-            // .raise()
-            // .style('z-index',-1);
+
 
         });
 
@@ -812,7 +646,7 @@ d3.json("can_no_projs.json", function(error, canada) {
             }
         });
 
-
+        // arrow animation stuff
         // var markers1 = route_path.attr("marker1", function(d){
         //     // console.log(d)
         //     return "url(#arrow)"})
@@ -940,18 +774,8 @@ d3.json("can_no_projs.json", function(error, canada) {
         const y = d3.scaleLinear().range([300, 0])
 
         const makeAnnotations = d3.annotation()
-            // .editMode(true)
             .type(type)
-            //accessors & accessorsInverse not needed
-            //if using x, y in annotations JSON
-            // .accessors({
-            //   x: d => x(parseTime(d.date)),
-            //   y: d => y(d.close)
-            // })
-            // .accessorsInverse({
-            //    date: d => timeFormat(x.invert(d.x)),
-            //    close: d => y.invert(d.y)
-            // })
+
             .annotations(annotations)
 
         d3.select("svg")
@@ -962,7 +786,6 @@ d3.json("can_no_projs.json", function(error, canada) {
 
 
         maketable(migration);
-        // d3.selectAll('route').remove()
 
     }
 

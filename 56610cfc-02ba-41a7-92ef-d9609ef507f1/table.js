@@ -24,7 +24,7 @@
    }
 
    function maketable(migration) {
-       console.log(migration)
+       // console.log(migration)
 
 
 
