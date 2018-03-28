@@ -340,8 +340,8 @@ d3.json("can_no_projs.json", function(error, canada) {
                 success: function(data) {
                     // console.log(data)
 
-                    data.result.records.forEach(d => {
-                        bc = data.result.records.filter(j => {
+                    data.result.records.forEach(function(d){
+                        bc = data.result.records.filter(function(j){
                             return j.Origin == "B.C." && j.Year == d.Year && j.Quarter == d.Quarter
                         })
                         bc_data.push({
@@ -408,8 +408,8 @@ d3.json("can_no_projs.json", function(error, canada) {
                     dataType: 'json',
                     success: function(data) {
 
-                        data.result.records.forEach(d => {
-                            bc = data.result.records.filter(j => {
+                        data.result.records.forEach(function(d) {
+                            bc = data.result.records.filter(function(j) {
                                 return j.Origin == "B.C." && j.Year == d.Year && j.Quarter == d.Quarter
                             })
                             bc_data.push({
@@ -624,7 +624,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                 .data([.99])
                 .enter()
                 .append("g")
-                .attr("transform", d => {
+                .attr("transform",function(d){
                     var p = pointAtLength(pa, pa.getTotalLength() * d);
                     // if(j.net >0){
                     // var p = pointAtLength(pa, pa.getTotalLength() * .75);
