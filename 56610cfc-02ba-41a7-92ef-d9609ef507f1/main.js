@@ -261,7 +261,7 @@ d3.json("can_no_projs.json", function(error, canada) {
     function getQuarter(d) {
         d = d || new Date(); // If no date supplied, use today
         var q = [4, 1, 2, 3];
-        return q[Math.floor(d.getMonth() / 3)] - 1;
+        return q[Math.floor(d.getMonth() / 3)-1];
     }
 
    
@@ -289,7 +289,7 @@ d3.json("can_no_projs.json", function(error, canada) {
     // console.log(Qrt)
     default_option = getQuarter()
     Qrt = Qrt.sort()
-    // console.log(Qrt)
+    console.log(default_option)
     QMenu
         // .append("select")
         // .attr("id", "locationMenu")
@@ -744,7 +744,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                         }
                     }),
                 note: {
-                    label: "net migration to BC from outside Canada",
+                    label: "net migration to B.C. from outside Canada",
                     title: formatComma(int)
                 },
                 //can use x, y directly instead of data
@@ -755,7 +755,7 @@ d3.json("can_no_projs.json", function(error, canada) {
             },
             {
                 note: {
-                    label: "net migration to BC from other provinces",
+                    label: "net migration to B.C. from other provinces",
                     title: formatComma(tot)
                 },
                 //can use x, y directly instead of data
