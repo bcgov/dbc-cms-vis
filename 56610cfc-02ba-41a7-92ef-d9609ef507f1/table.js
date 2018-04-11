@@ -26,9 +26,6 @@
    function maketable(migration) {
        // console.log(migration)
 
-
-
-
        var smallDat = []
 
        // var data = {
@@ -44,7 +41,7 @@
        //     data: data,
        //     success: function(data) {
        alldat = migration;
-       // console.log(alldat)
+       console.log(alldat)
        $.each(alldat, function(key, value) {
            if (value['Province'] != 'B.C.') {
                smallDat.push({
