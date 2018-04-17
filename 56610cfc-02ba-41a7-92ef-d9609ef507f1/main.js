@@ -282,7 +282,7 @@ d3.json("can_no_projs.json", function(error, canada) {
             return yr[yr.length - 1];
         });
 
-    var Qrt = [1, 2, 3, 4, 'Full Year']
+    var Qrt = [1, 2, 3, 4, 'Calendar Year', 'Census Year']
     QMenu = d3.select("#QDropdown");
     // console.log(Qrt)
     default_option = getQuarter()
@@ -381,11 +381,18 @@ d3.json("can_no_projs.json", function(error, canada) {
 
     function getData(currYear, currQ) {
 
-        if (currQ == 'Full Year') {
+        if (currQ == 'Calendar Year') {
             var data = {
                 resource_id: 'a8c186bb-857c-4138-8605-103c05411563', // the resource id
                 limit: 5000, // get 5 results
                 filters: '{"year":' + currYear + '}'
+            };
+
+        }else if (currQ == 'Census Year') {
+            var data = {
+                resource_id: '7d861c1e-40a4-4e9b-9eca-36c7cb7dd333', // the resource id
+                limit: 5000, // get 5 results
+                filters: '{"census_year":' + currYear + '}'
             };
 
         } else {
@@ -405,11 +412,17 @@ d3.json("can_no_projs.json", function(error, canada) {
                 // console.log(international)
                 var bc_data = [];
                 // var international;
-                if (currQ == 'Full Year') {
+                if (currQ == 'Calendar Year') {
                     var data = {
                         resource_id: 'f6171cc3-3845-40dd-9855-d87e8f524064', // the resource id
                         limit: 5000,
                         filters: '{"Year":' + currYear + '}'
+                    };
+                } else if (currQ == 'Census Year') {
+                    var data = {
+                        resource_id: '827c7f61-39bc-403f-8cf0-51fca5daef32', // the resource id
+                        limit: 5000,
+                        filters: '{"census_year":' + currYear + '}'
                     };
                 } else {
                     var data = {
@@ -425,7 +438,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                     dataType: 'json',
                     success: function(data) {
                         // console.log(data)
-                        if (currQ == 'Full Year') {
+                        if (currQ == 'Calendar Year') {
                             data.result.records.forEach(function(d) {
                                 // console.log(d.Quarter)
                                 bc = data.result.records.filter(function(j) {
@@ -447,7 +460,33 @@ d3.json("can_no_projs.json", function(error, canada) {
                                 return d.year == currYear;
                             })
 
-                        } else {
+                        } else if (currQ == 'Census Year') {
+                            data.result.records.forEach(function(d) {
+                                console.log(d)
+                                bc = data.result.records.filter(function(j) {
+                                    console.log(j)
+
+                                    return j.Origin == "B.C." && j.census_year == d.census_year
+                                })
+                                // console.log(bc)
+                                bc_data.push({
+                                    Province: d.Origin,
+                                    Origin: d["B.C."],
+                                    Destination: bc[0][d.Origin],
+                                    Year: d.census_year,
+                                    Quarter: currQ
+                                })
+                            })
+                            // console.log(bc_data)
+                            // console.log(international)
+                            migration = bc_data.filter(function(d) {
+                                return d.Year == currYear && d.Province != "B.C.";
+                            })
+                            int = international.filter(function(d) {
+                                return d.census_year == currYear;
+                            })
+
+                        }else {
                             data.result.records.forEach(function(d) {
                                 // console.log(d.Quarter)
                                 bc = data.result.records.filter(function(j) {
@@ -470,7 +509,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                             })
 
                         }
-                        console.log(int)
+                        // console.log(int)
 
 
 
@@ -560,9 +599,9 @@ d3.json("can_no_projs.json", function(error, canada) {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        console.log(d3.extent(migration, function(d){
-            return d.net;
-        }))
+        // console.log(d3.extent(migration, function(d){
+        //     return d.net;
+        // }))
         line_size.domain(d3.extent(migration, function(d){
             return Math.abs(d.net);
         }))
