@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <meta name="navigaton_title" content=""/>
+    <meta name="dcterms.publisher" content="Province of British Columbia"/>
+    <meta name="dcterms.created" content="2015-06-05"/>
+    <meta name="dcterms.modified" content="2016-12-30"/>
+    <meta name="security_label" content="Public"/>
+    <meta name="security_classification" content="Low"/>
+    <meta name="dcterms.subject" content=""/>
+    <meta name="dcterms.subject" content=""/>
+    <meta name="dcterms.creator" content=""/>
+    <meta name="dcsext.creator" content=""/>
+    <meta name="dcterms.language" content="eng"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content="">
+    <link rel="apple-touch-icon" sizes="57x57" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-57x57.png"/>
+    <link rel="apple-touch-icon" sizes="60x60" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-60x60.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-76x76.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-114x114.png"/>
+    <link rel="apple-touch-icon" sizes="120x120" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-120x120.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-144x144.png"/>
+    <link rel="apple-touch-icon" sizes="152x152" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-152x152.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="Gov-2.0-Bootstrap-Skeleton/icons/apple-icon-180x180.png"/>
+    <link rel="icon" type="image/png" sizes="192x192" href="Gov-2.0-Bootstrap-Skeleton/icons/android-icon-192x192.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="Gov-2.0-Bootstrap-Skeleton/icons/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="Gov-2.0-Bootstrap-Skeleton/icons/favicon-96x96.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="Gov-2.0-Bootstrap-Skeleton/icons/favicon-16x16.png"/>
+    <link rel="manifest" href="Gov-2.0-Bootstrap-Skeleton/icons/manifest.json"/>
+    <link rel="icon" type="image/png" href="Gov-2.0-Bootstrap-Skeleton/images/favicon.ico"/>
+    <meta name="msapplication-TileColor" content="#ffffff"/>
+    <meta name="msapplication-TileImage" content="Gov-2.0-Bootstrap-Skeleton/icons/ms-icon-144x144.png"/>
+    <meta name="theme-color" content="#ffffff"/>
+
+    <title>British Columbia Migration</title>
+
+     <!-- BOOTSTRAP CORE CSS v3.3.6 -->
+    <link rel="stylesheet" href="Gov-2.0-Bootstrap-Skeleton/css/bootstrap.min.css"/>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link rel="stylesheet" href="Gov-2.0-Bootstrap-Skeleton/css/ie10-viewport-bug-workaround.css"/>
+
+    <!-- STANDARD CSS -->
+    <link type="text/css" href="Gov-2.0-Bootstrap-Skeleton/css/main.css" rel="stylesheet"/>
+
+    <!-- FONTS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+
+    <!-- CUSTOM CSS -->
+    <link href="Gov-2.0-Bootstrap-Skeleton/css/custom-main.css" rel="stylesheet"/>
+    <link href="Gov-2.0-Bootstrap-Skeleton/css/custom-form.css" rel="stylesheet"/>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<meta charset="utf-8">
+<title>BC Regional Migration</title>
+<!-- <meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<link rel="shortcut icon" href="/favicon.ico"> -->
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+
+<!-- script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script> -->
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://rawgit.com/wenzhixin/bootstrap-table/develop/src/bootstrap-table.css">  
+
+<!-- Latest compiled and minified JavaScript -->
+
+<script src="https://rawgit.com/wenzhixin/bootstrap-table/develop/src/bootstrap-table.js"></script>
+
+<script src="https://rawgit.com/wenzhixin/bootstrap-table/develop/src/extensions/export/bootstrap-table-export.js"></script>
+
+<script src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+
+<script src="https://rawgit.com/wenzhixin/bootstrap-table/develop/src/extensions/editable/bootstrap-table-editable.js"></script>
+
+
+<script src="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="bootstrap-table-filter-control.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+
+
+
+
+
+ 
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.js"></script> -->
+<script src="https://use.fontawesome.com/46fa1fbe2f.js"></script>
+<!-- <select id="regions">
+    <option value="DevelopmentRegion" selected="selected">Development Region</option>
+    <option value="RegionalDistrict">Regional District</option>
+</select> -->
+<style>
+
+
+body { font-size: 140%; }
+    .spinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+    }
+
+        .btn.dl{
+    border: 1px solid transparent;
+    background-color: steelblue;
+    color: white;
+    /*width: 50%;*/
+    /*margin: 0 auto;*/
+    margin-bottom: 10px;
+    padding: 4px 12px;
+    -o-transition: background-color .2s ease-in; 
+    -moz-transition: background-color .2s ease-in;
+    -webkit-transition: background-color .2s ease-in; 
+    transition: background-color .2s ease-in; 
+    }
+
+
+</style>
+
+<body>
+
+      <!-- HEADER -->
+    <div id="header" role="banner">
+        <div id="header-main" class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div id="header-main-row" class="row">
+                    <!-- GOV TITLE -->
+                    <div class="col-sm-3 col-md-2 col-lg-2 header-main-left">
+                        <div id="logo">
+                            <a href="http://gov.bc.ca"><img src="Gov-2.0-Bootstrap-Skeleton/images/gov3_bc_logo.png" alt="Province of British Columbia" title="Province of British Columbia logo" /></a>
+                        </div>
+                        <div id="access">
+                            <ul>
+                                <li aria-label="Keyboard Tab Skip">
+                                    <a accesskey="0" href="#main-content-anchor" aria-label="Skip to main content">Skip to main content</a>
+                                </li>
+                                <li aria-label="Keyboard Tab Skip">
+                                    <a accesskey="0" href="#navigation-anchor" aria-label="Skip to navigation" aria-label="Skip to navigation">Skip to navigation</a>
+                                </li>
+                                <li aria-label="Keyboard Tab Skip">
+                                    <a accesskey="0" href="http://gov.bc.ca/webaccessibility/" aria-label="Accessibility Statement">Accessibility Statement</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="navbar-toggle gov-button-custom collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-label="Burger Navigation">
+                            <img src="Gov-2.0-Bootstrap-Skeleton/images/menu-open-mobile.png" />
+                        </button>
+                    </div>
+                    <div class="col-sm-8 col-md-8 col-lg-6 hidden-xs">
+                        <div class="bcgov-title">
+                            <!-- <h1> </h1> -->
+                        </div>
+                    </div>
+                    <!-- /GOV & ENV TITLE -->
+
+                    <!-- COLLAPSING NAVBAR -->
+                    <div id="navbar" class="collapse navbar-collapse" role="navigation">
+<a id="navigation-anchor"></a>
+                    <!--     <ul class="nav navbar-nav">
+                            <li><a href="https://www2.gov.bc.ca/gov/content/data/about-data-management/bc-stats">BC Stats</a></li>
+                            <li><a href="https://www2.gov.bc.ca/gov/content/data/statistics">Statistics</a></li>
+                            <li><a href="https://www2.gov.bc.ca/gov/content/data/statistics/people-population-community/population">Population</a></li>
+                            <li><a href="https://catalogue.data.gov.bc.ca/dataset">BC Data Catalogue</a></li>
+                            
+                        </ul> -->
+                    </div>
+                    <!-- /COLLAPSING NAVBAR -->
+                </div>
+            </div>
+            <div class="navigationRibbon">
+                <div class="level2Navigation">
+            <!--         <div class="container">
+                        <a href="https://www2.gov.bc.ca/gov/content/data/about-data-management/bc-stats">BC Stats</a>
+                        <a href="https://www2.gov.bc.ca/gov/content/data/statistics">Statistics</a>
+                        <a href="https://www2.gov.bc.ca/gov/content/data/statistics/people-population-community/population">Population</a>
+                        <a href="https://catalogue.data.gov.bc.ca/dataset">BC Data Catalogue</a>
+                        
+
+
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /HEADER -->
+    <!-- BODY CONTENT -->
+    <div id="topicTemplate" class="template container gov-container">
+
+    <div class="container">
+      <h2 >British Columbia Regional District Migration Components</h2>
+   </div>
+
+     <div class="container">
+        <div class="header">
+          <ul class="nav nav-pills pull-right">
+
+        </ul>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-8">
+
+        </div>
+    </div>
+
+    <div class="col-md-12">
+<div id="toolbar">
+
+</div>
+        <table id="orders-table" data-toolbar="#toolbar" data-show-export="true" class="table table-striped" data-filter-control="true" data-pagination="true" data-page-size="16" data-page-list="[10, 20, 50]" data-search="true"  >    
+          <thead>
+
+            <tr>
+                <th data-field="CensusYear" data-sortable="true" data-filter-control="select" >CensusYear</th>
+                <th data-field="Region" data-sortable="true" data-filter-control="select">Region</th>
+                <th data-field="Emigrants" data-sortable="true">Emigrants</th>
+                <th data-field="Immigrants" data-sortable="true">Immigrants</th>
+                <th data-field="interprov_in" data-sortable="true" >interprov_in</th>
+                <th data-field="interprov_net" data-sortable="true" >interprov_net</th>
+                <th data-field="interprov_out" data-sortable="true" >interprov_out</th>
+                <th data-field="intraprov_in" data-sortable="true" >intraprov_in</th>
+                <th data-field="intraprov_net" data-sortable="true" >intraprov_net</th>
+                <th data-field="intraprov_out" data-sortable="true" >intraprov_out</th>
+                <th data-field="net_international_migrants" data-sortable="true" >net_international_migrants</th>
+                <th data-field="net_npr" data-sortable="true" >net_npr</th>
+                <th data-field="net_temp_emigrants" data-sortable="true" >net_temp_emigrants</th>
+                <th data-field="returning_emigrants" data-sortable="true" >returning_emigrants</th>
+                <th data-field="total_net_migrants" data-sortable="true" >total_net_migrants</th>
+            </tr>
+        </thead>
+         <tbody class="searchable">
+
+
+ <div id='spinner' class='spinner'></div>
+
+    </tbody>
+</table>
+</div>
+   <div class="row" id="data">
+      <div class="col-xs-6">
+         <h4 class="header-small">About the Data</h4>
+         
+         <p><a href="http://www5.statcan.gc.ca/cansim/a26?lang=eng&id=510063">Regional District (or Census Divisions) data source:</a> Statistics Canada. Table  051-0063 -  Components of population growth by census division, sex and age group for the period from July 1 to June 30, based on the Standard Geographical Classification (SGC) 2011, annual (persons),  CANSIM (database). </p>
+      </div>
+      <div class="col-xs-6">
+         <h4 class="header-small">Download</h4>
+         <p>Download the data powering this table from the <a href="https://catalogue.data.gov.bc.ca/dataset/migration-by-development-region-and-regional-district">BC Data Catalogue</a>.</p>
+            <a class="btn dl" href="https://catalogue.data.gov.bc.ca/dataset/56610cfc-02ba-41a7-92ef-d9609ef507f1/resource/95579825-bfa2-4cab-90fa-196e0ecc8626/download/quarterlycomponents2017q4.csv" rel="nofollow" id="csv-download">
+               <i class="fa fa-download" aria-hidden="true"></i>
+            </span> CSV - Provincial 
+         </a>
+</div>
+</div>
+
+<div class="footer">
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    
+function LinkFormatter(value, row, index) {
+//     console.log(row)
+    if(value == ''){
+        value = 'Name not available'
+
+    }
+  return "<a href="+ 'https://catalogue.data.gov.bc.ca/dataset/' + row['name']+">"+value+"</a>";
+}
+    
+var smallDat = []
+
+var opts = {
+    lines: 11, // The number of lines to draw
+    length: 15, // The length of each line
+    width: 10, // The line thickness
+    radius: 30, // The radius of the inner circle
+    corners: 1, // Corner roundness (0..1)
+    rotate: 0, // The rotation offset
+    direction: 1, // 1: clockwise, -1: counterclockwise
+    color: '#000', // #rgb or #rrggbb
+    speed: 0.6, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: false, // Whether to render a shadow
+    hwaccel: false, // Whether to use hardware acceleration
+    className: 'spinner', // The CSS class to assign to the spinner
+    zIndex: 2e9, // The z-index (defaults to 2000000000)
+    top: 'auto', // Top position relative to parent in px
+    left: 'auto' // Left position relative to parent in px
+};
+// date picker example https://www.script-tutorials.com/datepicker-jquery-ui/
+// var $t = $('#example').DataTable();
+// var counter = 0;
+// var tab;
+
+$(function() {
+   
+//    var target = document.getElementById('spinner')
+//    var spinner = new Spinner(opts).spin(target);
+    var total_records_count = [];
+    var response = [];
+
+       var smallDat = []
+
+       var data = {
+           resource_id: '726e54aa-f403-42d2-90b1-72c9a8c8e84f', // the resource id
+           limit: 2000
+       };
+
+       newdat = []
+       url = 'https://catalogue.data.gov.bc.ca/api/action/datastore_search';
+       $.ajax({
+           async: false,
+           url: url,
+           data: data,
+           success: function(data) {
+       alldat = data.result.records;
+       // console.log(alldat[0])
+       $.each(alldat, function(key, value) {
+           // if (value['Province'] != 'B.C.') {
+               smallDat.push({
+                   CensusYear: value['CensusYear'],
+                   Region: value['Region'],
+                   Emigrants: value['emigrants'],
+                   Immigrants: value['immigrants'],
+                   interprov_in: value['interprov_in'],
+                   interprov_net: value['interprov_net'],
+                   interprov_out: value['interprov_out'],
+                   intraprov_in: value['intraprov_in'],
+                   intraprov_net: value['intraprov_net'],
+                   intraprov_out: value['intraprov_out'],
+                   net_international_migrants: value['net_international_migrants'],
+                   net_npr: value['net_npr'],
+                   net_temp_emigrants: value['net_temp_emigrants'],
+                   returning_emigrants: value['returning_emigrants'],
+                   total_net_migrants: value['total_net_migrants']
+
+               })
+           // }
+       })
+       // if (target) spinner.stop();
+           }
+       });
+
+    $(function() {
+        // console.log(smallDat)
+        $('#orders-table').bootstrapTable({
+            data: smallDat
+        });
+    });
+
+
+
+});
+</script>
+
+
+
+</body>
+
+</html>
