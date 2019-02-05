@@ -1,3 +1,4 @@
+
 margin = {
     top: 20,
     right: 20,
@@ -29,12 +30,13 @@ var path = d3.geoPath()
 var line_path = d3.geoPath()
     .projection(null);
 
-// var radius = d3.scaleSqrt()
-//     .domain([0, 3600])
-//     .range([0, 50]);
+var radius = d3.scaleSqrt()
+    .domain([0, 3600])
+    .range([0, 50]);
 
-var line_size = d3.scaleLinear();
-    
+var line_size = d3.scaleLinear()
+    .domain([32, 14103])
+    .range([2, 30])
 
 
 var migration, test, net;
@@ -107,53 +109,53 @@ var prov_lookup = {
 
 function highlight(highlightData) {
     // console.log(highlightData)
-    if (highlightData.properties.PRENAME != "British Columbia") {
-        curr_net = migration.filter(function(j) {
+         if (highlightData.properties.PRENAME != "British Columbia") {
+                curr_net = migration.filter(function(j) {
 
-            return prov_lookup[j.Province] == highlightData.properties.PRENAME
-        })
-        // console.log(curr_net)
-        if (curr_net[0].Province != 'B.C.') {
+                    return prov_lookup[j.Province] == highlightData.properties.PRENAME
+                })
+                // console.log(curr_net)
+                if (curr_net[0].Province != 'B.C.') {
 
-            if (curr_net[0].net > 0) {
-                svg.append("text")
-                    .attr("x", width - 204)
-                    .attr("y", 100.5)
-                    .attr("dy", "0.32em")
-                    .attr("class", 'lab')
-                    .attr("fill", '#3f51b5')
-                    .text(highlightData.properties.PRENAME);
+                    if(curr_net[0].net > 0){
+                        svg.append("text")
+                        .attr("x", width - 204)
+                        .attr("y", 100.5)
+                        .attr("dy", "0.32em")
+                        .attr("class", 'lab')
+                        .attr("fill",'#3f51b5')
+                        .text(highlightData.properties.PRENAME);
 
-                svg.append("text")
-                    .attr("x", width - 204)
-                    .attr("y", 120.5)
-                    .attr("dy", "0.32em")
-                    .attr('class', 'lab')
-                    .attr("fill", '#3f51b5')
-                    .text('Net change: ' + (curr_net[0].net))
-            } else {
+                    svg.append("text")
+                        .attr("x", width - 204)
+                        .attr("y", 120.5)
+                        .attr("dy", "0.32em")
+                        .attr('class', 'lab')
+                        .attr("fill",'#3f51b5')
+                        .text('Net change: ' + (curr_net[0].net))
+                    }else{
 
-                svg.append("text")
-                    .attr("x", width - 204)
-                    .attr("y", 100.5)
-                    .attr("dy", "0.32em")
-                    .attr("class", 'lab')
-                    .attr("fill", '#D32F2F')
-                    .text(highlightData.properties.PRENAME);
+                    svg.append("text")
+                        .attr("x", width - 204)
+                        .attr("y", 100.5)
+                        .attr("dy", "0.32em")
+                        .attr("class", 'lab')
+                        .attr("fill",'#D32F2F')
+                        .text(highlightData.properties.PRENAME);
 
-                svg.append("text")
-                    .attr("x", width - 204)
-                    .attr("y", 120.5)
-                    .attr("dy", "0.32em")
-                    .attr("fill", '#D32F2F')
-                    .attr('class', 'lab')
-                    .text('Net change: ' + (curr_net[0].net))
-            }
+                    svg.append("text")
+                        .attr("x", width - 204)
+                        .attr("y", 120.5)
+                        .attr("dy", "0.32em")
+                        .attr("fill",'#D32F2F')
+                        .attr('class', 'lab')
+                        .text('Net change: ' + (curr_net[0].net))
+                    }
 
 
 
-        }
-    }
+                    }
+                }
     var highlightLine = highlightData.properties.PRENAME;
     if (highlightLine != 'British Columbia') {
         svg.selectAll('.route')
@@ -241,7 +243,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                 return '#f9c932'
             }
         }).on('mouseover', highlight)
-        .on('mouseout', unHighlight);
+        .on('mouseout',unHighlight);
 
     var tot;
     var int, yearMenu, bc_data;
@@ -249,20 +251,20 @@ d3.json("can_no_projs.json", function(error, canada) {
 
     var international;
 
-
+ 
 
     var yr = [];
-    for (var i = 1971; i <= 2017; i++) {
+    for (var i = 1971; i <= 2018; i++) {
         yr.push(i);
     }
 
     function getQuarter(d) {
         d = d || new Date(); // If no date supplied, use today
         var q = [4, 1, 2, 3];
-        return q[Math.floor(d.getMonth() / 3) - 1];
+        return q[Math.floor(d.getMonth() / 3)] - 1;
     }
 
-
+   
     yearMenu = d3.select("#yearDropdown");
     yearMenu
         // .append("select")
@@ -282,12 +284,12 @@ d3.json("can_no_projs.json", function(error, canada) {
             return yr[yr.length - 1];
         });
 
-    var Qrt = [1, 2, 3, 4, 'Calendar Year', 'Census Year']
+    var Qrt = [1, 2, 3, 4]
     QMenu = d3.select("#QDropdown");
     // console.log(Qrt)
     default_option = getQuarter()
     Qrt = Qrt.sort()
-    console.log(default_option)
+    // console.log(Qrt)
     QMenu
         // .append("select")
         // .attr("id", "locationMenu")
@@ -313,7 +315,7 @@ d3.json("can_no_projs.json", function(error, canada) {
     var data = {
         resource_id: 'c99d63f6-5ec4-4ac0-9c07-c0352f2f1928', // the resource id
         limit: 5000, // get 5 results
-        filters: '{"year":' + currYear + '}'
+        filters: '{"year":' + currYear + ',"quarter":"' +'Q' +currQ + '"}'
     };
     $.ajax({
         url: 'https://catalogue.data.gov.bc.ca/api/3/action/datastore_search',
@@ -338,8 +340,8 @@ d3.json("can_no_projs.json", function(error, canada) {
                 success: function(data) {
                     // console.log(data)
 
-                    data.result.records.forEach(function(d) {
-                        bc = data.result.records.filter(function(j) {
+                    data.result.records.forEach(d => {
+                        bc = data.result.records.filter(j => {
                             return j.Origin == "B.C." && j.Year == d.Year && j.Quarter == d.Quarter
                         })
                         bc_data.push({
@@ -354,14 +356,14 @@ d3.json("can_no_projs.json", function(error, canada) {
                         return d.Year == currYear && d.Quarter == currQ && d.Province != "B.C.";
                     })
                     int = international.filter(function(d) {
-                        return d.year == currYear && d.quarter == 'Q' + currQ;
+                        return d.year == currYear && d.quarter == 'Q'+currQ;
                     })
                     // console.log(int)
                     // migration.net_int = int[0]['Total net migration']
                     migration.push({
                         Province: 'International',
-                        Origin: Number(int[0]['Immigrants']) + Number(int[0]['Net_non_permanent_residents']),
-                        Destination: Number(int[0]['Emigrants']) + Number(int[0]['Net_temporary_emigrants']) - Number(int[0]['Returning_emigrants']),
+                        Origin: Number(int[0]['Immigrants'])+Number(int[0]['Net_non_permanent_residents']),
+                        Destination: Number(int[0]['Emigrants'])+Number(int[0]['Net_temporary_emigrants'])-Number(int[0]['Returning_emigrants']),
                         Quarter: currQ,
                         Year: currYear
                         // net1: int[0]['Total net migration']
@@ -380,145 +382,56 @@ d3.json("can_no_projs.json", function(error, canada) {
     // });
 
     function getData(currYear, currQ) {
-
-        if (currQ == 'Calendar Year') {
-            var data = {
-                resource_id: 'a8c186bb-857c-4138-8605-103c05411563', // the resource id
-                limit: 5000, // get 5 results
-                filters: '{"year":' + currYear + '}'
-            };
-
-        }else if (currQ == 'Census Year') {
-            var data = {
-                resource_id: '7d861c1e-40a4-4e9b-9eca-36c7cb7dd333', // the resource id
-                limit: 5000, // get 5 results
-                filters: '{"census_year":' + currYear + '}'
-            };
-
-        } else {
-            var data = {
-                resource_id: 'c99d63f6-5ec4-4ac0-9c07-c0352f2f1928', // the resource id
-                limit: 5000, // get 5 results
-                filters: '{"year":' + currYear + ',"quarter":"' + 'Q' + currQ + '"}'
-            };
-        }
-
+        var data = {
+            resource_id: 'c99d63f6-5ec4-4ac0-9c07-c0352f2f1928', // the resource id
+            limit: 5000, // get 5 results
+            filters: '{"year":' + currYear + ',"quarter":"' +'Q' +currQ + '"}'
+        };
         $.ajax({
             url: 'https://catalogue.data.gov.bc.ca/api/3/action/datastore_search',
             data: data,
             dataType: 'json',
             success: function(data) {
-                var international = data.result.records;
+                international = data.result.records;
                 // console.log(international)
                 var bc_data = [];
-                // var international;
-                if (currQ == 'Calendar Year') {
-                    var data = {
-                        resource_id: 'f6171cc3-3845-40dd-9855-d87e8f524064', // the resource id
-                        limit: 5000,
-                        filters: '{"Year":' + currYear + '}'
-                    };
-                } else if (currQ == 'Census Year') {
-                    var data = {
-                        resource_id: '827c7f61-39bc-403f-8cf0-51fca5daef32', // the resource id
-                        limit: 5000,
-                        filters: '{"census_year":' + currYear + '}'
-                    };
-                } else {
-                    var data = {
-                        resource_id: '95579825-bfa2-4cab-90fa-196e0ecc8626', // the resource id
-                        limit: 5000,
-                        filters: '{"Year":' + currYear + ',"Quarter":"' + currQ + '"}'
-                    };
-                }
+                var international;
 
+                var data = {
+                    resource_id: '95579825-bfa2-4cab-90fa-196e0ecc8626', // the resource id
+                    limit: 5000,
+                    filters: '{"Year":' + currYear + ',"Quarter":"' + currQ + '"}'
+                };
                 $.ajax({
                     url: 'https://catalogue.data.gov.bc.ca/api/3/action/datastore_search',
                     data: data,
                     dataType: 'json',
                     success: function(data) {
-                        // console.log(data)
-                        if (currQ == 'Calendar Year') {
-                            data.result.records.forEach(function(d) {
-                                // console.log(d.Quarter)
-                                bc = data.result.records.filter(function(j) {
 
-                                    return j.Origin == "B.C." && j.Year == d.Year
-                                })
-                                bc_data.push({
-                                    Province: d.Origin,
-                                    Origin: d["B.C."],
-                                    Destination: bc[0][d.Origin],
-                                    Year: d.Year,
-                                    Quarter: currQ
-                                })
+                        data.result.records.forEach(d => {
+                            bc = data.result.records.filter(j => {
+                                return j.Origin == "B.C." && j.Year == d.Year && j.Quarter == d.Quarter
                             })
-                            migration = bc_data.filter(function(d) {
-                                return d.Year == currYear && d.Province != "B.C.";
+                            bc_data.push({
+                                Province: d.Origin,
+                                Origin: d["B.C."],
+                                Destination: bc[0][d.Origin],
+                                Year: d.Year,
+                                Quarter: d.Quarter
                             })
-                            int = international.filter(function(d) {
-                                return d.year == currYear;
-                            })
-
-                        } else if (currQ == 'Census Year') {
-                            data.result.records.forEach(function(d) {
-                                console.log(d)
-                                bc = data.result.records.filter(function(j) {
-                                    console.log(j)
-
-                                    return j.Origin == "B.C." && j.census_year == d.census_year
-                                })
-                                // console.log(bc)
-                                bc_data.push({
-                                    Province: d.Origin,
-                                    Origin: d["B.C."],
-                                    Destination: bc[0][d.Origin],
-                                    Year: d.census_year,
-                                    Quarter: currQ
-                                })
-                            })
-                            // console.log(bc_data)
-                            // console.log(international)
-                            migration = bc_data.filter(function(d) {
-                                return d.Year == currYear && d.Province != "B.C.";
-                            })
-                            int = international.filter(function(d) {
-                                return d.census_year == currYear;
-                            })
-
-                        }else {
-                            data.result.records.forEach(function(d) {
-                                // console.log(d.Quarter)
-                                bc = data.result.records.filter(function(j) {
-
-                                    return j.Origin == "B.C." && j.Year == d.Year && j.Quarter == d.Quarter
-                                })
-                                bc_data.push({
-                                    Province: d.Origin,
-                                    Origin: d["B.C."],
-                                    Destination: bc[0][d.Origin],
-                                    Year: d.Year,
-                                    Quarter: d.Quarter
-                                })
-                            })
-                            migration = bc_data.filter(function(d) {
-                                return d.Year == currYear && d.Quarter == currQ && d.Province != "B.C.";
-                            })
-                            int = international.filter(function(d) {
-                                return d.year == currYear && d.quarter == 'Q' + currQ;
-                            })
-
-                        }
+                        })
+                        migration = bc_data.filter(function(d) {
+                            return d.Year == currYear && d.Quarter == currQ && d.Province != "B.C.";
+                        })
+                        int = international.filter(function(d) {
+                        return d.year == currYear && d.quarter == 'Q'+currQ;
+                        })
                         // console.log(int)
-
-
-
-
                         // migration.net_int = int[0]['Total net migration']
                         migration.push({
                             Province: 'International',
-                            Origin: Number(int[0]['Immigrants']) + Number(int[0]['Net_non_permanent_residents']),
-                            Destination: Number(int[0]['Emigrants']) + Number(int[0]['Net_temporary_emigrants']) - Number(int[0]['Returning_emigrants']),
+                            Origin: Number(int[0]['Immigrants'])+Number(int[0]['Net_non_permanent_residents']),
+                        Destination: Number(int[0]['Emigrants'])+Number(int[0]['Net_temporary_emigrants'])-Number(int[0]['Returning_emigrants']),
                             Quarter: currQ,
                             Year: currYear
                             // net1: int[0]['Total net migration']
@@ -530,20 +443,23 @@ d3.json("can_no_projs.json", function(error, canada) {
             }
         })
     }
+    // d3.csv("Quarterly_2017.csv", function(error, dat) {
 
-    $('#QDropdown').on('change', function(data) {
-        currQ = $('#QDropdown').val();
-        console.log(currQ)
-        bc_data = getData(currYear, currQ)
-        update(migration, currYear, currQ)
-    })
+    // })
 
-    $('#yearDropdown').on('change', function(data) {
-        currYear = $('#yearDropdown').val();
-        console.log(currYear)
-        bc_data = getData(currYear, currQ)
-        // update(migration, currYear, currQ)
-    })
+        $('#QDropdown').on('change', function(data) {
+            currQ = $('#QDropdown').val();
+            console.log(currQ)
+            bc_data = getData(currYear, currQ)
+            update(migration, currYear, currQ)
+        })
+
+        $('#yearDropdown').on('change', function(data) {
+            currYear = $('#yearDropdown').val();
+            console.log(currYear)
+            bc_data = getData(currYear, currQ)
+            // update(migration, currYear, currQ)
+        })
 
     function update(migration, currYear, currQ) {
 
@@ -570,14 +486,14 @@ d3.json("can_no_projs.json", function(error, canada) {
             cen = line_path.centroid(d)
             if (d.properties.PRENAME == 'Alberta') {
                 cen[0] += 1
-                cen[1] = cen[1] - 4
+                cen[1] = cen[1] - 3.2
             }
             if (d.properties.PRENAME == 'Saskatchewan') {
-                cen[1] = cen[1] - 2.2
+                cen[1] = cen[1] - 1.2
                 // console.log(cen)
             }
             if (d.properties.PRENAME == 'Manitoba') {
-                cen[1] = cen[1] - 2.7
+                cen[1] = cen[1] - 2.2
                 // console.log(cen)
             }
             if (d.properties.PRENAME == 'New Brunswick') {
@@ -598,14 +514,6 @@ d3.json("can_no_projs.json", function(error, canada) {
         tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-
-        // console.log(d3.extent(migration, function(d){
-        //     return d.net;
-        // }))
-        line_size.domain(d3.extent(migration, function(d){
-            return Math.abs(d.net);
-        }))
-        .range([2, 25])
 
         route_path = g.selectAll(".route")
 
@@ -631,30 +539,25 @@ d3.json("can_no_projs.json", function(error, canada) {
                 if (prov_lookup[d.Province] == 'Nunavut') {
                     bc_coords = [-122.75635246400601, 57.75809690349844]
                 } else if (prov_lookup[d.Province] == 'Alberta') {
-                    bc_coords = [-120, 51.263570]
+                    bc_coords = [-121.245605, 52.263570]
                 } else if (prov_lookup[d.Province] == 'Yukon') {
                     bc_coords = [-130.417969, 59.562099]
                 } else if (prov_lookup[d.Province] == 'Saskatchewan') {
-                    bc_coords = [-121.394922, 52.769826]
+                    bc_coords = [-121.394922, 53.469826]
                 } else if (prov_lookup[d.Province] == 'Manitoba') {
-                    bc_coords = [-121.546484, 53.562016]
+                    bc_coords = [-121.146484, 54.262016]
                 } else if (prov_lookup[d.Province] == 'Ontario') {
-                    bc_coords = [-121.946484, 54.262016]
+                    bc_coords = [-121.146484, 54.462016]
                 } else if (prov_lookup[d.Province] == 'Northwest Territories') {
                     bc_coords = [-122.167969, 59.462099]
                 } else if (prov_lookup[d.Province] == 'Newfoundland and Labrador') {
-                    bc_coords = [-122.146484, 57.286543]
+                    bc_coords = [-122.146484, 56.386543]
                 } else if (d.Province == 'International') {
                     bc_coords = [-138.346484, 53.76543]
                 } else if (prov_lookup[d.Province] == 'Quebec') {
-                    bc_coords = [-122.146484, 56.386543]
-                } else if (prov_lookup[d.Province] == 'Prince Edward Island') {
-                    bc_coords = [-122.146484, 55.88]
-                } else if (prov_lookup[d.Province] == 'Nova Scotia') {
-                    bc_coords = [-122.146484, 55.2]
-                } else if (prov_lookup[d.Province] == 'New Brunswick') {
-                    bc_coords = [-122.146484, 54.8]
+                    bc_coords = [-122.046484, 55.586543]
                 }
+
 
                 if (d.net < 0) {
 
@@ -666,6 +569,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                             d.coords
                         ]
                     })
+                    // }
                 } else {
                     // if (d.Province == 'Alberta') {
                     return path({
@@ -675,7 +579,10 @@ d3.json("can_no_projs.json", function(error, canada) {
 
                         ]
                     })
+                    // }
+
                 }
+
             })
             // .style("stroke-dasharray", ("5, 3"))
             .attr("stroke", function(d, i) {
@@ -717,8 +624,11 @@ d3.json("can_no_projs.json", function(error, canada) {
                 .data([.99])
                 .enter()
                 .append("g")
-                .attr("transform", function(d) {
+                .attr("transform", d => {
                     var p = pointAtLength(pa, pa.getTotalLength() * d);
+                    // if(j.net >0){
+                    // var p = pointAtLength(pa, pa.getTotalLength() * .75);
+                    // }
 
                     return "translate(" + p + ") rotate( " + angleAtLength(pa, pa.getTotalLength() * d) + ")";
                 });
@@ -834,7 +744,7 @@ d3.json("can_no_projs.json", function(error, canada) {
                         }
                     }),
                 note: {
-                    label: "net migration to B.C. from outside Canada",
+                    label: "net migration to BC from outside Canada",
                     title: formatComma(int)
                 },
                 //can use x, y directly instead of data
@@ -845,7 +755,7 @@ d3.json("can_no_projs.json", function(error, canada) {
             },
             {
                 note: {
-                    label: "net migration to B.C. from other provinces",
+                    label: "net migration to BC from other provinces",
                     title: formatComma(tot)
                 },
                 //can use x, y directly instead of data
@@ -878,5 +788,8 @@ d3.json("can_no_projs.json", function(error, canada) {
         maketable(migration);
 
     }
+
+
+
 
 })
