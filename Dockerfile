@@ -1,7 +1,7 @@
 FROM alpine:edge
 MAINTAINER leo.lou@gov.bc.ca
 
-ARG plugins=http.cors,http.git,http.hugo,http.realip
+ARG plugins=http.cors,http.git,http.realip
 ARG http_port=5000
 
 RUN apk update \
