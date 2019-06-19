@@ -254,7 +254,7 @@ d3.json("can_no_projs.json", function(error, canada) {
  
 
     var yr = [];
-    for (var i = 1971; i <= 2018; i++) {
+    for (var i = 1971; i <= 2019; i++) {
         yr.push(i);
     }
 
