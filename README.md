@@ -1,4 +1,6 @@
 
+![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)
+
 # dbc-cms-vis
 
 This repo contains interactive tables and visualizations that source data from the [BC Data Catalogue](https://catalogue.data.gov.bc.ca/dataset).
