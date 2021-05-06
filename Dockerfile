@@ -9,9 +9,7 @@ RUN apk update \
     && apk --no-cache add --virtual devs tar curl
 
 #Install Caddy Server, and All Middleware
-RUN curl --silent --show-error --fail --location \
-      --header "Accept: application/tar+gzip, application/x-gzip, application/octet-stream" -o - \
-      "https://caddyserver.com/download/linux/amd64?plugins=${plugins}&license=personal" \
+RUN curl -L "https://github.com/caddyserver/caddy/releases/download/v0.10.10/caddy_v0.10.10_linux_amd64.tar.gz" \
     | tar --no-same-owner -C /usr/bin/ -xz caddy \
  && chmod 0755 /usr/bin/caddy \
  && /usr/bin/caddy -version
