@@ -1,5 +1,5 @@
 
-![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)
+[![Lifecycle:Retired](https://img.shields.io/badge/Lifecycle-Retired-d45500)]
 
 # dbc-cms-vis
 
